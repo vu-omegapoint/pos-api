@@ -6,15 +6,14 @@ To learn more about Fastify, check out the [Fastify documentation](https://www.f
 
 In the project directory, you can run:
 
-### `npm run build`
+### `npm run start`
 
-To compile the code to the outDir.
-Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
+Use `npm run start` to run the application in production mode. Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
-### `npm start`
+### `npm run dev`
 
-To run the application in development mode. Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
+Use `npm run dev` to run the application in development mode with hot reload. Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
 ### `npm run lint`
 
-To check for linting mistakes.
+Use `npm run lint` to check for linting mistakes. By using `npm run lint-fix` the issues that are possible to be tackled would be tweaked.
