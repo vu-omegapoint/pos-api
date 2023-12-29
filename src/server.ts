@@ -1,6 +1,8 @@
-import fastify from "fastify";
-import App from "./app";
 import closeWithGrace from "close-with-grace";
+import fastify from "fastify";
+import FastifySwagger from "@fastify/swagger";
+import FastifySwaggerUI from "@fastify/swagger-ui";
+import App from "./app";
 
 // Instantiate Fastify with some config
 const server = fastify({
@@ -17,6 +19,35 @@ const server = fastify({
   },
   ignoreTrailingSlash: true,
 });
+
+// Configure swagger
+const swaggerOptions = {
+  openapi: {
+    info: {
+      title: "Point of Sale System API",
+      description: "API implemented for Team Dizainieriai contract.",
+      version: "1.0.0",
+      contact: {
+        name: "Team OmegaPoint",
+      },
+    },
+    host: "localhost",
+    schemes: ["http"],
+    consumes: ["application/json"],
+    produces: ["application/json"],
+  },
+};
+const swaggerUIOptions = {
+  routePrefix: "/docs",
+  exposeRoute: true,
+  theme: {
+    title: "PoS System OpenAPI Documentation",
+  },
+  uiConfig: { deepLinking: true },
+};
+
+void server.register(FastifySwagger, swaggerOptions);
+void server.register(FastifySwaggerUI, swaggerUIOptions);
 
 // Register your application as a normal plugin.
 void server.register(App);
