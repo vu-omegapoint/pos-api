@@ -1,22 +1,13 @@
-import closeWithGrace from "close-with-grace";
+import closeWithGrace, { CloseWithGraceAsyncCallback } from "close-with-grace";
 import fastify from "fastify";
+import AutoLoad from "@fastify/autoload";
 import FastifySwagger from "@fastify/swagger";
 import FastifySwaggerUI from "@fastify/swagger-ui";
-import App from "./app";
+import { join } from "path";
 
 // Instantiate Fastify with some config
 const server = fastify({
-  logger: {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        levelFirst: true,
-        colorize: true,
-        translateTime: "hh:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
-  },
+  logger: true,
   ignoreTrailingSlash: true,
 });
 
@@ -46,17 +37,25 @@ const swaggerUIOptions = {
   uiConfig: { deepLinking: true },
 };
 
+// Register Fastify Swagger plugins.
 void server.register(FastifySwagger, swaggerOptions);
 void server.register(FastifySwaggerUI, swaggerUIOptions);
 
-// Register your application as a normal plugin.
-void server.register(App);
+// Load all plugins defined in /plugins/ directory
+void server.register(AutoLoad, {
+  dir: join(__dirname, "plugins"),
+});
+
+// Load all routes defined in /routes/ directory.
+void server.register(AutoLoad, {
+  dir: join(__dirname, "routes"),
+});
 
 // Add graceful shutdown.
 const closeListeners = closeWithGrace({ delay: 500 }, async function ({ err }) {
   if (err) server.log.error(err);
   await server.close();
-} as closeWithGrace.CloseWithGraceAsyncCallback);
+} as CloseWithGraceAsyncCallback);
 
 server.addHook("onClose", (_instance, done) => {
   closeListeners.uninstall();

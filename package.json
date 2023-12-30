@@ -3,22 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "description": "Software Engineering Design and Architecture laboratory work 3",
-  "main": "lib/server.ts",
-  "types": "lib/server.d.ts",
+  "author": "vu-omegapoint",
+  "license": "MIT",
   "scripts": {
     "build": "tsc 1>&2",
     "clean": "rimraf lib",
     "dev:tsc": "tsc -w -outdir lib/",
-    "dev:watch": "nodemon lib/server.js",
+    "dev:watch": "nodemon lib/server.js | pino-pretty -l -c -i 'pid,hostname' -t 'hh:MM:ss Z'",
     "dev:livereload": "livereload ./lib/ -w 500",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,App,LiveReload\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run dev:tsc\" \"npm run dev:watch\" \"npm run dev:livereload\" ",
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2",
     "start": "npm run clean && npm run build && node lib/server.js"
   },
-  "keywords": [],
-  "author": "vu-omegapoint",
-  "license": "MIT",
   "dependencies": {
     "@fastify/autoload": "^5.8.0",
     "@fastify/sensible": "^5.5.0",
@@ -26,8 +23,7 @@
     "@fastify/swagger-ui": "^2.0.1",
     "close-with-grace": "^1.2.0",
     "fastify": "^4.25.2",
-    "fastify-plugin": "^4.5.1",
-    "pino-pretty": "^10.3.1"
+    "fastify-plugin": "^4.5.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
@@ -41,6 +37,7 @@
     "fastify-tsconfig": "^2.0.0",
     "livereload": "^0.9.3",
     "nodemon": "^3.0.2",
+    "pino-pretty": "^10.3.1",
     "prettier": "^3.1.1",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
