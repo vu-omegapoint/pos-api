@@ -1,6 +1,6 @@
 {
   "name": "pos-api-service",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Software Engineering Design and Architecture laboratory work 3",
   "author": "vu-omegapoint",
@@ -8,13 +8,13 @@
   "scripts": {
     "build": "tsc 1>&2",
     "clean": "rimraf lib",
-    "dev:tsc": "tsc -w -outdir lib/",
+    "dev:tsc": "tsc -w -outdir lib/ 1>&2",
     "dev:watch": "nodemon lib/server.js | pino-pretty -l -c -i 'pid,hostname' -t 'hh:MM:ss Z'",
     "dev:livereload": "livereload ./lib/ -w 500",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,App,LiveReload\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run dev:tsc\" \"npm run dev:watch\" \"npm run dev:livereload\" ",
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2",
-    "start": "npm run clean && npm run build && node lib/server.js"
+    "start": "node lib/server.js"
   },
   "dependencies": {
     "@fastify/autoload": "^5.8.0",

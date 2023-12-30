@@ -1,9 +1,9 @@
 import closeWithGrace, { CloseWithGraceAsyncCallback } from "close-with-grace";
 import fastify from "fastify";
+import { join } from "path";
 import AutoLoad from "@fastify/autoload";
 import FastifySwagger from "@fastify/swagger";
 import FastifySwaggerUI from "@fastify/swagger-ui";
-import { join } from "path";
 
 // Instantiate Fastify with some config
 const server = fastify({
