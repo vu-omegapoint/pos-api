@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from "fastify";
-import { Endpoints } from "../Constants";
+import { Endpoints } from "../constants";
 
 const pingPong: FastifyPluginAsync = (server, _opts) => {
   server.get(

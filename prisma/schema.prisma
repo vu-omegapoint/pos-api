@@ -1,0 +1,65 @@
+// Prisma schema file. Documentation: https://pris.ly/d/prisma-schema
+// After making changes to this file, you have to run the following command:
+// npx prisma migrate dev --name <NAME>
+// More details: https://www.prisma.io/docs/getting-started/quickstart.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id            Int           @id @default(autoincrement())
+  name          String
+  contactInfo   ContactInfo   @relation(fields: [contactInfoId], references: [id])
+  contactInfoId Int           @unique
+  address       Address       @relation(fields: [addressId], references: [id])
+  addressId     Int           @unique
+  Transaction   Transaction[]
+}
+
+model ContactInfo {
+  id       Int       @id @default(autoincrement())
+  email    String
+  phone    String
+  customer Customer?
+
+  @@unique([email, phone], name: "uniqueContactIdentifier")
+}
+
+model Address {
+  id       Int       @id @default(autoincrement())
+  street   String
+  city     String
+  state    String
+  zip      String
+  customer Customer?
+}
+
+model Transaction {
+  id             Int             @id @default(autoincrement())
+  items          Item[]
+  customer       Customer        @relation(fields: [customerId], references: [id])
+  customerId     Int             @unique
+  paymentDetails PaymentDetails?
+}
+
+model Item {
+  id            Int          @id @default(autoincrement())
+  itemId        String
+  quantity      Int
+  price         Decimal
+  Transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId Int?         @unique
+}
+
+model PaymentDetails {
+  id            Int          @id @default(autoincrement())
+  paymentMethod String // Enums are not supported for SQLite using Prisma
+  Transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId Int?         @unique
+}

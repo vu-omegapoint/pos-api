@@ -1,13 +1,19 @@
 import closeWithGrace, { CloseWithGraceAsyncCallback } from "close-with-grace";
+import dotenv from "dotenv";
 import fastify from "fastify";
 import { join } from "path";
 import AutoLoad from "@fastify/autoload";
 import FastifySwagger from "@fastify/swagger";
 import FastifySwaggerUI from "@fastify/swagger-ui";
 
+// Load process.env from .env file.
+dotenv.config();
+
 // Instantiate Fastify with some config
 const server = fastify({
-  logger: true,
+  logger: {
+    level: process.env.LOG_LEVEL,
+  },
   ignoreTrailingSlash: true,
 });
 
@@ -29,7 +35,7 @@ const swaggerOptions = {
   },
 };
 const swaggerUIOptions = {
-  routePrefix: "/docs",
+  routePrefix: process.env.SWAGGER_ROUTE_PREFIX,
   exposeRoute: true,
   theme: {
     title: "PoS System OpenAPI Documentation",
@@ -63,7 +69,7 @@ server.addHook("onClose", (_instance, done) => {
 });
 
 // Add request cancellation handling.
-server.addHook("onRequest", (request, message, done) => {
+server.addHook("onRequest", (request, _message, done) => {
   request.raw.on("close", () => {
     if (request.raw.destroyed) {
       request.log.info("Request has been cancelled");
@@ -73,9 +79,12 @@ server.addHook("onRequest", (request, message, done) => {
 });
 
 // Start listening.
-server.listen({ port: 8080 }, (err) => {
-  if (err) {
-    server.log.error(err);
-    process.exit(1);
-  }
-});
+server.listen(
+  { port: process.env.PORT ? parseInt(process.env.PORT) : 3000 },
+  (err) => {
+    if (err) {
+      server.log.error(err);
+      process.exit(1);
+    }
+  },
+);
