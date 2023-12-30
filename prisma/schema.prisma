@@ -13,17 +13,17 @@ datasource db {
 }
 
 model Customer {
-  id            Int           @id @default(autoincrement())
+  id            String        @id @default(uuid())
   name          String
   contactInfo   ContactInfo   @relation(fields: [contactInfoId], references: [id])
-  contactInfoId Int           @unique
+  contactInfoId String        @unique
   address       Address       @relation(fields: [addressId], references: [id])
-  addressId     Int           @unique
-  Transaction   Transaction[]
+  addressId     String        @unique
+  transaction   Transaction[]
 }
 
 model ContactInfo {
-  id       Int       @id @default(autoincrement())
+  id       String    @id @default(uuid())
   email    String
   phone    String
   customer Customer?
@@ -32,7 +32,7 @@ model ContactInfo {
 }
 
 model Address {
-  id       Int       @id @default(autoincrement())
+  id       String    @id @default(uuid())
   street   String
   city     String
   state    String
@@ -41,25 +41,31 @@ model Address {
 }
 
 model Transaction {
-  id             Int             @id @default(autoincrement())
+  id             String          @id @default(uuid())
   items          Item[]
   customer       Customer        @relation(fields: [customerId], references: [id])
-  customerId     Int             @unique
+  customerId     String          @unique
   paymentDetails PaymentDetails?
 }
 
 model Item {
-  id            Int          @id @default(autoincrement())
-  itemId        String
+  id            String       @id @default(uuid())
+  entity        ItemEntity   @relation(fields: [entityId], references: [id])
+  entityId      String       @unique
   quantity      Int
   price         Decimal
-  Transaction   Transaction? @relation(fields: [transactionId], references: [id])
-  transactionId Int?         @unique
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId String?      @unique
+}
+
+model ItemEntity {
+  id    String @id @default(uuid())
+  items Item[]
 }
 
 model PaymentDetails {
-  id            Int          @id @default(autoincrement())
+  id            String       @id @default(uuid())
   paymentMethod String // Enums are not supported for SQLite using Prisma
-  Transaction   Transaction? @relation(fields: [transactionId], references: [id])
-  transactionId Int?         @unique
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  transactionId String?      @unique
 }

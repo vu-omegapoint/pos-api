@@ -3,16 +3,16 @@ import { Endpoints } from "../constants";
 
 const pingPong: FastifyPluginAsync = (server, _opts) => {
   server.get(
-    Endpoints.pingEndpoint,
+    Endpoints.ping,
     {
       schema: {
-        description: "Test whether the API works",
+        hide: true,
         tags: ["Mock"],
-        summary: "Wanna play some ping pong?",
+        summary: "Play ping-pong",
         response: {
           200: {
-            description: "Successful response",
-            type: "string",
+            description: "OK",
+            type: "null",
           },
         },
         security: [],

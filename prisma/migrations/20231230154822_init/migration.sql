@@ -1,23 +1,23 @@
 -- CreateTable
 CREATE TABLE "Customer" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
-    "contactInfoId" INTEGER NOT NULL,
-    "addressId" INTEGER NOT NULL,
+    "contactInfoId" TEXT NOT NULL,
+    "addressId" TEXT NOT NULL,
     CONSTRAINT "Customer_contactInfoId_fkey" FOREIGN KEY ("contactInfoId") REFERENCES "ContactInfo" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Customer_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "ContactInfo" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "email" TEXT NOT NULL,
     "phone" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "Address" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "street" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "state" TEXT NOT NULL,
@@ -26,26 +26,32 @@ CREATE TABLE "Address" (
 
 -- CreateTable
 CREATE TABLE "Transaction" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "customerId" INTEGER NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "customerId" TEXT NOT NULL,
     CONSTRAINT "Transaction_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "Item" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "itemId" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "entityId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "price" DECIMAL NOT NULL,
-    "transactionId" INTEGER,
+    "transactionId" TEXT,
+    CONSTRAINT "Item_entityId_fkey" FOREIGN KEY ("entityId") REFERENCES "ItemEntity" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Item_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
+CREATE TABLE "ItemEntity" (
+    "id" TEXT NOT NULL PRIMARY KEY
+);
+
+-- CreateTable
 CREATE TABLE "PaymentDetails" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "paymentMethod" TEXT NOT NULL,
-    "transactionId" INTEGER,
+    "transactionId" TEXT,
     CONSTRAINT "PaymentDetails_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "Transaction" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -60,6 +66,9 @@ CREATE UNIQUE INDEX "ContactInfo_email_phone_key" ON "ContactInfo"("email", "pho
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Transaction_customerId_key" ON "Transaction"("customerId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Item_entityId_key" ON "Item"("entityId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Item_transactionId_key" ON "Item"("transactionId");

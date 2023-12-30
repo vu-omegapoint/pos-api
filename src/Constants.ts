@@ -1,3 +1,4 @@
 export enum Endpoints {
-  pingEndpoint = "/ping",
+  customers = "/customers",
+  ping = "/ping",
 }

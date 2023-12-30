@@ -17,6 +17,7 @@ export default fp(async (fastify) => {
   // Make Prisma Client available through the fastify server instance: server.prisma
   fastify.decorate("prisma", prisma);
 
+  // Gracefully shutdown prisma on fastify server close.
   fastify.addHook("onClose", async (server) => {
     await server.prisma.$disconnect();
   });
