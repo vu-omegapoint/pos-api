@@ -1,11 +1,13 @@
 import closeWithGrace, { CloseWithGraceAsyncCallback } from "close-with-grace";
 import dotenv from "dotenv";
 import fastify from "fastify";
-import { join } from "path";
-import AutoLoad from "@fastify/autoload";
+import { withRefResolver } from "fastify-zod";
 import FastifySwagger from "@fastify/swagger";
 import FastifySwaggerUI from "@fastify/swagger-ui";
-import { GenericSchemas, ModelSchemas } from "./schemas";
+import { customerSchemas } from "./modules/customers/customer.schema";
+import { Endpoints } from "./modules/constants";
+import { customerRoutes } from "./modules/customers/customer.route";
+import PrismaPlugin from "./prisma";
 
 // Load process.env from .env file.
 dotenv.config();
@@ -42,24 +44,17 @@ const swaggerUIOptions = {
 };
 
 // Register Fastify Swagger plugins.
-void server.register(FastifySwagger, swaggerOptions);
+void server.register(FastifySwagger, withRefResolver(swaggerOptions));
 void server.register(FastifySwaggerUI, swaggerUIOptions);
 
-// Load all plugins defined in /plugins/ directory
-void server.register(AutoLoad, {
-  dir: join(__dirname, "plugins"),
-});
+// Register Prisma plugin.
+void server.register(PrismaPlugin);
 
-// Load all routes defined in /routes/ directory.
-void server.register(AutoLoad, {
-  dir: join(__dirname, "routes"),
-});
+// Register all routes
+void server.register(customerRoutes, { prefix: Endpoints.customers });
 
 // Register all schemas.
-for (const schema of Object.values(GenericSchemas)) {
-  server.addSchema(schema);
-}
-for (const schema of Object.values(ModelSchemas)) {
+for (const schema of [...customerSchemas]) {
   server.addSchema(schema);
 }
 
