@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from "fastify";
 import { Endpoints } from "../constants";
 
-const pingPong: FastifyPluginAsync = (server, _opts) => {
+const pingPong: FastifyPluginAsync = (server) => {
   server.get(
     Endpoints.ping,
     {
@@ -12,7 +12,7 @@ const pingPong: FastifyPluginAsync = (server, _opts) => {
         response: {
           200: {
             description: "OK",
-            type: "null",
+            type: "string",
           },
         },
         security: [],

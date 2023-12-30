@@ -1,8 +1,9 @@
 import { FastifyPluginAsync } from "fastify";
 import { Endpoints } from "../constants";
 import { Prisma } from "@prisma/client";
+import { RequestByIdParams } from "../types";
 
-const customers: FastifyPluginAsync = (server, _opts) => {
+const customers: FastifyPluginAsync = (server) => {
   server.get(
     Endpoints.customers,
     {
@@ -15,7 +16,7 @@ const customers: FastifyPluginAsync = (server, _opts) => {
             type: "array",
             items: {
               type: "object",
-              //$ref: "#/components/schemas/Customer", // TODO - see how to generate schemas from Prisma models
+              $ref: "customer#",
             },
           },
         },
@@ -28,23 +29,18 @@ const customers: FastifyPluginAsync = (server, _opts) => {
     },
   );
 
-  server.get<{ Params: { id: string } }>(
+  server.get<RequestByIdParams>(
     `${Endpoints.customers}/:id`,
     {
       schema: {
         tags: ["Customers"],
         summary: "Get a specific customer",
-        params: {
-          type: "object",
-          properties: {
-            id: { type: "string" },
-          },
-        },
+        params: { $ref: "requestByIdParams#" },
         response: {
           200: {
             description: "OK",
             type: "object",
-            //$ref: "#/components/schemas/Customer",
+            $ref: "customer#",
           },
           404: {
             description: "Not Found",
@@ -54,8 +50,7 @@ const customers: FastifyPluginAsync = (server, _opts) => {
         security: [],
       },
     },
-    async (req, res) => {
-      const { id } = req.params;
+    async ({ params: { id } }, res) => {
       const customer = await server.prisma.customer.findUnique({
         where: { id },
       });
@@ -72,13 +67,13 @@ const customers: FastifyPluginAsync = (server, _opts) => {
         summary: "Creates a customer.",
         body: {
           type: "object",
-          // $ref: "#/components/schemas/Customer",
+          $ref: "customer#",
         },
         response: {
           201: {
             description: "Created",
             type: "object",
-            //$ref: "#/components/schemas/Customer",
+            $ref: "customer#",
           },
         },
         security: [],
@@ -92,27 +87,22 @@ const customers: FastifyPluginAsync = (server, _opts) => {
     },
   );
 
-  server.put<{ Params: { id: string }; Body: Prisma.CustomerUpdateInput }>(
+  server.put<RequestByIdParams & { Body: Prisma.CustomerUpdateInput }>(
     `${Endpoints.customers}/:id`,
     {
       schema: {
         tags: ["Customers"],
         summary: "Edit a customer",
-        params: {
-          type: "object",
-          properties: {
-            id: { type: "string" },
-          },
-        },
+        params: { $ref: "requestByIdParams#" },
         body: {
           type: "object",
-          // $ref: "#/components/schemas/Customer",
+          $ref: "customer#",
         },
         response: {
           200: {
             description: "OK",
             type: "object",
-            // $ref: "#/components/schemas/Customer",
+            $ref: "customer#",
           },
           404: {
             description: "Not Found",
@@ -122,33 +112,27 @@ const customers: FastifyPluginAsync = (server, _opts) => {
         security: [],
       },
     },
-    async (req, res) => {
-      const { id } = req.params;
+    async ({ params: { id }, body }, res) => {
       const customerCount = await server.prisma.customer.count({
         where: { id },
       });
       if (customerCount === 0) return res.status(404).send();
 
       const customer = await server.prisma.customer.update({
-        where: { id: req.params.id },
-        data: req.body,
+        where: { id },
+        data: body,
       });
       return res.status(200).send(customer);
     },
   );
 
-  server.delete<{ Params: { id: string } }>(
+  server.delete<RequestByIdParams>(
     `${Endpoints.customers}/:id`,
     {
       schema: {
         tags: ["Customers"],
         summary: "Delete a customer",
-        params: {
-          type: "object",
-          properties: {
-            id: { type: "string" },
-          },
-        },
+        params: { $ref: "requestByIdParams#" },
         response: {
           204: {
             description: "No Content",
@@ -162,8 +146,7 @@ const customers: FastifyPluginAsync = (server, _opts) => {
         security: [],
       },
     },
-    async (req, res) => {
-      const { id } = req.params;
+    async ({ params: { id } }, res) => {
       const customerCount = await server.prisma.customer.count({
         where: { id },
       });

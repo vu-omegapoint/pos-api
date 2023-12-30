@@ -5,6 +5,7 @@ import { join } from "path";
 import AutoLoad from "@fastify/autoload";
 import FastifySwagger from "@fastify/swagger";
 import FastifySwaggerUI from "@fastify/swagger-ui";
+import { GenericSchemas, ModelSchemas } from "./schemas";
 
 // Load process.env from .env file.
 dotenv.config();
@@ -24,9 +25,7 @@ const swaggerOptions = {
       title: "Point of Sale System API",
       description: "API implemented for Team Dizainieriai contract.",
       version: "1.0.0",
-      contact: {
-        name: "Team OmegaPoint",
-      },
+      contact: { name: "Team OmegaPoint" },
     },
     host: "localhost",
     schemes: ["http"],
@@ -37,10 +36,9 @@ const swaggerOptions = {
 const swaggerUIOptions = {
   routePrefix: process.env.SWAGGER_ROUTE_PREFIX,
   exposeRoute: true,
-  theme: {
-    title: "PoS System OpenAPI Documentation",
-  },
+  theme: { title: "PoS System OpenAPI Documentation" },
   uiConfig: { deepLinking: true },
+  staticCSP: true,
 };
 
 // Register Fastify Swagger plugins.
@@ -56,6 +54,14 @@ void server.register(AutoLoad, {
 void server.register(AutoLoad, {
   dir: join(__dirname, "routes"),
 });
+
+// Register all schemas.
+for (const schema of Object.values(GenericSchemas)) {
+  server.addSchema(schema);
+}
+for (const schema of Object.values(ModelSchemas)) {
+  server.addSchema(schema);
+}
 
 // Add graceful shutdown.
 const closeListeners = closeWithGrace({ delay: 500 }, async function ({ err }) {
