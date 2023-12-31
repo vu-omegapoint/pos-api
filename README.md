@@ -35,8 +35,6 @@ By using `npm run lint:fix` the issues that are possible to be fixed automatical
 ## Fastify
 
 This project uses [`fastify`](https://fastify.dev). To learn more about this framework, check out the [Fastify documentation](https://www.fastify.io/docs/latest/).
-Use `npm run lint` to check for linting mistakes.
-By using `npm run lint:fix` the issues that are possible to be fixed automatically would be addressed.
 
 ## Swagger
 
