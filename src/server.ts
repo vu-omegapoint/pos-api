@@ -4,10 +4,10 @@ import fastify from "fastify";
 import { withRefResolver } from "fastify-zod";
 import FastifySwagger from "@fastify/swagger";
 import FastifySwaggerUI from "@fastify/swagger-ui";
-import { customerSchemas } from "./modules/customers/customer.schema";
-import { Endpoints } from "./modules/constants";
-import { customerRoutes } from "./modules/customers/customer.route";
+import { Endpoints } from "./constants";
 import PrismaPlugin from "./prisma";
+import { customerRoutes, customerSchemas } from "./modules/customers";
+import { genericSchemas } from "./modules/generic";
 
 // Load process.env from .env file.
 dotenv.config();
@@ -40,7 +40,6 @@ const swaggerUIOptions = {
   exposeRoute: true,
   theme: { title: "PoS System OpenAPI Documentation" },
   uiConfig: { deepLinking: true },
-  staticCSP: true,
 };
 
 // Register Fastify Swagger plugins.
@@ -54,7 +53,7 @@ void server.register(PrismaPlugin);
 void server.register(customerRoutes, { prefix: Endpoints.customers });
 
 // Register all schemas.
-for (const schema of [...customerSchemas]) {
+for (const schema of [...customerSchemas, ...genericSchemas]) {
   server.addSchema(schema);
 }
 

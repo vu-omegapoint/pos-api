@@ -13,56 +13,33 @@ const customerCore = {
         invalid_type_error: "Email must be a valid email string",
       })
       .email(),
-    phone: z.string({
-      required_error: "Phone is required",
-      invalid_type_error: "Phone must be a string",
-    }),
+    phone: z
+      .string({
+        invalid_type_error: "Phone must be a string",
+      })
+      .optional(),
   }),
   address: z.object({
-    street: z.string(),
+    street: z
+      .string({ invalid_type_error: "Street must be a string" })
+      .optional(),
     city: z.string({
       required_error: "City is required",
       invalid_type_error: "City must be a string",
     }),
-    state: z.string(),
-    zip: z.string(),
+    state: z
+      .string({ invalid_type_error: "State must be a string" })
+      .optional(),
+    zip: z.string({ invalid_type_error: "Zip must be a string" }).optional(),
   }),
 };
 
 const customerGenerated = {
-  id: z
-    .string({
-      required_error: "Id is required",
-      invalid_type_error: "Id must be a UUID format string",
-    })
-    .uuid(),
+  id: z.string().uuid(),
 };
 
-const createCustomerSchema = z.object({
+const createOrUpdateCustomerSchema = z.object({
   ...customerCore,
-});
-
-const createCustomerResponseSchema = z.object({
-  ...customerGenerated,
-  ...customerCore,
-});
-
-const updateCustomerSchema = z.object({
-  ...customerCore,
-});
-
-const updateCustomerResponseSchema = z.object({
-  ...customerGenerated,
-  ...customerCore,
-});
-
-const requestCustomerByIdParams = z.object({
-  id: z
-    .string({
-      required_error: "Id is required",
-      invalid_type_error: "Id must be a UUID format string",
-    })
-    .uuid(),
 });
 
 const customerResponseSchema = z.object({
@@ -71,18 +48,16 @@ const customerResponseSchema = z.object({
 });
 const customersResponseSchema = z.array(customerResponseSchema);
 
-export type CreateCustomerInput = z.infer<typeof createCustomerSchema>;
-export type UpdateCustomerInput = z.infer<typeof updateCustomerSchema>;
-export type RequestCustomerByIdParams = z.infer<
-  typeof requestCustomerByIdParams
+export type CreateOrUpdateCustomerInput = z.infer<
+  typeof createOrUpdateCustomerSchema
 >;
 
-export const { schemas: customerSchemas, $ref } = buildJsonSchemas({
-  createCustomerSchema,
-  createCustomerResponseSchema,
-  updateCustomerSchema,
-  updateCustomerResponseSchema,
-  requestCustomerByIdParams,
-  customerResponseSchema,
-  customersResponseSchema,
-});
+export const { schemas: customerSchemas, $ref: $customerRef } =
+  buildJsonSchemas(
+    {
+      customerResponseSchema,
+      customersResponseSchema,
+      createOrUpdateCustomerSchema,
+    },
+    { $id: "CustomerSchemas" },
+  );

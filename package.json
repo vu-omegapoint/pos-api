@@ -6,13 +6,15 @@
   "author": "vu-omegapoint",
   "license": "MIT",
   "scripts": {
+    "build": "tsc 1>&2",
+    "clean": "rimraf lib",
     "dev:tsc": "tsc -w -outdir lib/ 1>&2",
     "dev:watch": "nodemon lib/server.js | pino-pretty -l -c -i 'pid,hostname' -t 'hh:MM:ss Z'",
     "dev:livereload": "livereload ./lib/ -w 500",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,App,LiveReload\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run dev:tsc\" \"npm run dev:watch\" \"npm run dev:livereload\" ",
     "lint": "eslint ./src/**/*.ts 1>&2",
     "lint-fix": "eslint --fix ./src/**/*.ts 1>&2",
-    "start": "rimraf lib && tsc 1>&2 && node lib/server.js"
+    "start": "node lib/server.js"
   },
   "dependencies": {
     "@fastify/swagger": "^8.13.0",

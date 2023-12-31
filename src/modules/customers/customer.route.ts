@@ -6,7 +6,8 @@ import {
   updateCustomerHandler,
   deleteCustomerHandler,
 } from "./customer.controller";
-import { $ref } from "./customer.schema";
+import { $customerRef } from "./customer.schema";
+import { $genericRef } from "../generic";
 
 export const customerRoutes = (server: FastifyInstance) => {
   server.get(
@@ -16,7 +17,7 @@ export const customerRoutes = (server: FastifyInstance) => {
         tags: ["Customers"],
         summary: "List all customers",
         response: {
-          200: $ref("customersResponseSchema"),
+          200: $customerRef("customersResponseSchema"),
         },
       },
     },
@@ -29,13 +30,10 @@ export const customerRoutes = (server: FastifyInstance) => {
       schema: {
         tags: ["Customers"],
         summary: "Get a specific customer",
-        params: $ref("requestCustomerByIdParams"),
+        params: $genericRef("requestByIdParams"),
         response: {
-          200: $ref("customerResponseSchema"),
-          404: {
-            description: "Not Found",
-            type: "null",
-          },
+          200: $customerRef("customerResponseSchema"),
+          404: $genericRef("errorResponse"),
         },
       },
     },
@@ -48,8 +46,8 @@ export const customerRoutes = (server: FastifyInstance) => {
       schema: {
         tags: ["Customers"],
         summary: "Creates a customer.",
-        body: $ref("createCustomerSchema"),
-        response: { 201: $ref("createCustomerResponseSchema") },
+        body: $customerRef("createOrUpdateCustomerSchema"),
+        response: { 201: $customerRef("customerResponseSchema") },
       },
     },
     createCustomerHandler(server),
@@ -61,14 +59,11 @@ export const customerRoutes = (server: FastifyInstance) => {
       schema: {
         tags: ["Customers"],
         summary: "Edit a customer",
-        params: $ref("requestCustomerByIdParams"),
-        body: $ref("updateCustomerSchema"),
+        params: $genericRef("requestByIdParams"),
+        body: $customerRef("createOrUpdateCustomerSchema"),
         response: {
-          200: $ref("updateCustomerResponseSchema"),
-          404: {
-            description: "Not Found",
-            type: "null",
-          },
+          200: $customerRef("customerResponseSchema"),
+          404: $genericRef("errorResponse"),
         },
       },
     },
@@ -81,16 +76,10 @@ export const customerRoutes = (server: FastifyInstance) => {
       schema: {
         tags: ["Customers"],
         summary: "Delete a customer",
-        params: $ref("requestCustomerByIdParams"),
+        params: $genericRef("requestByIdParams"),
         response: {
-          204: {
-            description: "No Content",
-            type: "null",
-          },
-          404: {
-            description: "Not Found",
-            type: "null",
-          },
+          204: $genericRef("noContentResponse"),
+          404: $genericRef("errorResponse"),
         },
       },
     },

@@ -1,9 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import {
-  CreateCustomerInput,
-  RequestCustomerByIdParams,
-  UpdateCustomerInput,
-} from "./customer.schema";
+import { CreateOrUpdateCustomerInput } from "./customer.schema";
 import {
   createCustomer,
   checkIfCustomerExistsById,
@@ -12,6 +8,7 @@ import {
   findCustomers,
   updateCustomer,
 } from "./customer.service";
+import { RequestByIdParams } from "../generic";
 
 export const getCustomersHandler =
   (server: FastifyInstance) =>
@@ -21,14 +18,14 @@ export const getCustomersHandler =
       return reply.code(200).send(customers);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500).send(e);
+      return reply.code(500);
     }
   };
 
 export const getCustomerByIdHandler =
   (server: FastifyInstance) =>
   async (
-    request: FastifyRequest<{ Params: RequestCustomerByIdParams }>,
+    request: FastifyRequest<{ Params: RequestByIdParams }>,
     reply: FastifyReply,
   ) => {
     const { params } = request;
@@ -42,14 +39,14 @@ export const getCustomerByIdHandler =
       return reply.code(200).send(customer);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500).send(e);
+      return reply.code(500);
     }
   };
 
 export const createCustomerHandler =
   (server: FastifyInstance) =>
   async (
-    request: FastifyRequest<{ Body: CreateCustomerInput }>,
+    request: FastifyRequest<{ Body: CreateOrUpdateCustomerInput }>,
     reply: FastifyReply,
   ) => {
     const { body } = request;
@@ -58,7 +55,7 @@ export const createCustomerHandler =
       return reply.code(201).send(customer);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500).send(e);
+      return reply.code(500);
     }
   };
 
@@ -66,8 +63,8 @@ export const updateCustomerHandler =
   (server: FastifyInstance) =>
   async (
     request: FastifyRequest<{
-      Body: UpdateCustomerInput;
-      Params: RequestCustomerByIdParams;
+      Body: CreateOrUpdateCustomerInput;
+      Params: RequestByIdParams;
     }>,
     reply: FastifyReply,
   ) => {
@@ -83,14 +80,14 @@ export const updateCustomerHandler =
       return reply.code(200).send(customer);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500).send(e);
+      return reply.code(500);
     }
   };
 
 export const deleteCustomerHandler =
   (server: FastifyInstance) =>
   async (
-    request: FastifyRequest<{ Params: RequestCustomerByIdParams }>,
+    request: FastifyRequest<{ Params: RequestByIdParams }>,
     reply: FastifyReply,
   ) => {
     const { params } = request;
@@ -105,6 +102,6 @@ export const deleteCustomerHandler =
       return reply.code(204).send();
     } catch (e) {
       server.log.error(e);
-      return reply.code(500).send(e);
+      return reply.code(500);
     }
   };

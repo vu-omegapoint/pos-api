@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
-import { CreateCustomerInput, UpdateCustomerInput } from "./customer.schema";
+import { CreateOrUpdateCustomerInput } from "./customer.schema";
 
 export async function createCustomer(
   server: FastifyInstance,
-  input: CreateCustomerInput,
+  input: CreateOrUpdateCustomerInput,
 ) {
   return await server.prisma.customer.create({
     data: {
@@ -23,7 +23,7 @@ export async function createCustomer(
 export async function updateCustomer(
   server: FastifyInstance,
   id: string,
-  input: UpdateCustomerInput,
+  input: CreateOrUpdateCustomerInput,
 ) {
   return await server.prisma.customer.update({
     where: { id },
