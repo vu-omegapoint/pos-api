@@ -1,0 +1,40 @@
+// Prisma schema file. Documentation: https://pris.ly/d/prisma-schema
+// After making changes to this file, you have to run the following command:
+// npx prisma migrate dev --name <NAME>
+// More details: https://www.prisma.io/docs/getting-started/quickstart.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id            String      @id @default(uuid())
+  name          String
+  contactInfo   ContactInfo @relation(fields: [contactInfoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  contactInfoId String      @unique
+  address       Address     @relation(fields: [addressId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  addressId     String      @unique
+}
+
+model ContactInfo {
+  id       String    @id @default(uuid())
+  email    String
+  phone    String?
+  customer Customer?
+
+  @@unique([email, phone], name: "uniqueContactIdentifier")
+}
+
+model Address {
+  id       String    @id @default(uuid())
+  street   String?
+  city     String
+  state    String?
+  zip      String?
+  customer Customer?
+}

@@ -1,21 +1,21 @@
-import closeWithGrace from "close-with-grace";
+import closeWithGrace, { CloseWithGraceAsyncCallback } from "close-with-grace";
+import dotenv from "dotenv";
 import fastify from "fastify";
+import { withRefResolver } from "fastify-zod";
 import FastifySwagger from "@fastify/swagger";
 import FastifySwaggerUI from "@fastify/swagger-ui";
-import App from "./app";
+import { Endpoints } from "./constants";
+import PrismaPlugin from "./prisma";
+import { customerRoutes, customerSchemas } from "./modules/customers";
+import { genericSchemas } from "./modules/generic";
+
+// Load process.env from .env file.
+dotenv.config();
 
 // Instantiate Fastify with some config
 const server = fastify({
   logger: {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        levelFirst: true,
-        colorize: true,
-        translateTime: "hh:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
+    level: process.env.LOG_LEVEL,
   },
   ignoreTrailingSlash: true,
 });
@@ -27,9 +27,7 @@ const swaggerOptions = {
       title: "Point of Sale System API",
       description: "API implemented for Team Dizainieriai contract.",
       version: "1.0.0",
-      contact: {
-        name: "Team OmegaPoint",
-      },
+      contact: { name: "Team OmegaPoint" },
     },
     host: "localhost",
     schemes: ["http"],
@@ -38,25 +36,32 @@ const swaggerOptions = {
   },
 };
 const swaggerUIOptions = {
-  routePrefix: "/docs",
+  routePrefix: process.env.SWAGGER_ROUTE_PREFIX,
   exposeRoute: true,
-  theme: {
-    title: "PoS System OpenAPI Documentation",
-  },
+  theme: { title: "PoS System OpenAPI Documentation" },
   uiConfig: { deepLinking: true },
 };
 
-void server.register(FastifySwagger, swaggerOptions);
+// Register Fastify Swagger plugins.
+void server.register(FastifySwagger, withRefResolver(swaggerOptions));
 void server.register(FastifySwaggerUI, swaggerUIOptions);
 
-// Register your application as a normal plugin.
-void server.register(App);
+// Register Prisma plugin.
+void server.register(PrismaPlugin);
+
+// Register all routes
+void server.register(customerRoutes, { prefix: Endpoints.customers });
+
+// Register all schemas.
+for (const schema of [...customerSchemas, ...genericSchemas]) {
+  server.addSchema(schema);
+}
 
 // Add graceful shutdown.
 const closeListeners = closeWithGrace({ delay: 500 }, async function ({ err }) {
   if (err) server.log.error(err);
   await server.close();
-} as closeWithGrace.CloseWithGraceAsyncCallback);
+} as CloseWithGraceAsyncCallback);
 
 server.addHook("onClose", (_instance, done) => {
   closeListeners.uninstall();
@@ -64,7 +69,7 @@ server.addHook("onClose", (_instance, done) => {
 });
 
 // Add request cancellation handling.
-server.addHook("onRequest", (request, message, done) => {
+server.addHook("onRequest", (request, _message, done) => {
   request.raw.on("close", () => {
     if (request.raw.destroyed) {
       request.log.info("Request has been cancelled");
@@ -74,9 +79,12 @@ server.addHook("onRequest", (request, message, done) => {
 });
 
 // Start listening.
-server.listen({ port: 8080 }, (err) => {
-  if (err) {
-    server.log.error(err);
-    process.exit(1);
-  }
-});
+server.listen(
+  { port: process.env.PORT ? parseInt(process.env.PORT) : 3000 },
+  (err) => {
+    if (err) {
+      server.log.error(err);
+      process.exit(1);
+    }
+  },
+);
