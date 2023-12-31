@@ -1,8 +1,3 @@
-// Prisma schema file. Documentation: https://pris.ly/d/prisma-schema
-// After making changes to this file, you have to run the following command:
-// npx prisma migrate dev --name <NAME>
-// More details: https://www.prisma.io/docs/getting-started/quickstart.
-
 generator client {
   provider = "prisma-client-js"
 }

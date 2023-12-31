@@ -13,7 +13,7 @@
     "dev:livereload": "livereload ./lib/ -w 500",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,App,LiveReload\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run dev:tsc\" \"npm run dev:watch\" \"npm run dev:livereload\" ",
     "lint": "eslint ./src/**/*.ts 1>&2",
-    "lint-fix": "eslint --fix ./src/**/*.ts 1>&2",
+    "lint:fix": "eslint --fix ./src/**/*.ts 1>&2",
     "start": "node lib/server.js"
   },
   "dependencies": {
