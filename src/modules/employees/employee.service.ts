@@ -50,9 +50,10 @@ export async function updateEmployeePermissions(
     where: { id },
     data: {
       permissions: {
-        updateMany: [
+        upsert: [
           ...input.permissions.map((p) => ({
-            data: p,
+            update: p,
+            create: p,
             where: { name: p.name },
           })),
         ],
@@ -74,9 +75,10 @@ export async function updateEmployeeSchedule(
     where: { id },
     data: {
       schedule: {
-        updateMany: [
+        upsert: [
           ...input.schedule.map((p) => ({
-            data: p,
+            update: p,
+            create: p,
             where: { weekday: p.weekday },
           })),
         ],
