@@ -42,16 +42,22 @@ model Employee {
 }
 
 model Permission {
-  name      String     @id
+  name       String
   // Prisma doesn't support enums for SQLite. 
   // https://github.com/prisma/prisma/issues/2219
-  level     String
-  employees Employee[]
+  level      String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  employeeId String
+
+  @@id([name, employeeId])
 }
 
 model WorkShift {
-  weekday   String     @id
-  startTime String
-  endTime   String
-  employees Employee[]
+  weekday    String
+  startTime  String
+  endTime    String
+  employee   Employee @relation(references: [id], onDelete: Cascade, onUpdate: Cascade, fields: [employeeId])
+  employeeId String
+
+  @@id([weekday, employeeId])
 }

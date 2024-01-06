@@ -1,19 +1,19 @@
 import { FastifyInstance } from "fastify";
 import {
-  CreateOrUpdateEmployeeCoreInput,
+  CreateOrUpdateEmployeeInput,
   UpdateEmployeePermissionsInput,
   UpdateEmployeeScheduleInput,
 } from "./employee.schema";
 
 export async function createEmployee(
   server: FastifyInstance,
-  input: CreateOrUpdateEmployeeCoreInput,
+  input: CreateOrUpdateEmployeeInput,
 ) {
   return await server.prisma.employee.create({
     data: {
       name: input.name,
-      permissions: { create: [] },
-      schedule: { create: [] },
+      permissions: { create: input.permissions },
+      schedule: { create: input.schedule },
     },
     select: {
       id: true,
@@ -24,19 +24,29 @@ export async function createEmployee(
   });
 }
 
-export async function updateEmployeeCore(
+export async function updateEmployee(
   server: FastifyInstance,
   id: string,
-  input: CreateOrUpdateEmployeeCoreInput,
+  input: CreateOrUpdateEmployeeInput,
 ) {
   return await server.prisma.employee.update({
     where: { id },
     data: {
       name: input.name,
+      permissions: {
+        deleteMany: { employeeId: id },
+        create: input.permissions,
+      },
+      schedule: {
+        deleteMany: { employeeId: id },
+        create: input.schedule,
+      },
     },
     select: {
       id: true,
       name: true,
+      permissions: true,
+      schedule: true,
     },
   });
 }
@@ -50,19 +60,11 @@ export async function updateEmployeePermissions(
     where: { id },
     data: {
       permissions: {
-        upsert: [
-          ...input.permissions.map((p) => ({
-            update: p,
-            create: p,
-            where: { name: p.name },
-          })),
-        ],
+        deleteMany: { employeeId: id },
+        create: input.permissions,
       },
     },
-    select: {
-      id: true,
-      permissions: true,
-    },
+    select: { id: true, permissions: true },
   });
 }
 
@@ -75,19 +77,11 @@ export async function updateEmployeeSchedule(
     where: { id },
     data: {
       schedule: {
-        upsert: [
-          ...input.schedule.map((s) => ({
-            update: s,
-            create: s,
-            where: { weekday: s.weekday },
-          })),
-        ],
+        deleteMany: { employeeId: id },
+        create: input.schedule,
       },
     },
-    select: {
-      id: true,
-      schedule: true,
-    },
+    select: { id: true, schedule: true },
   });
 }
 
@@ -124,8 +118,6 @@ export async function checkIfEmployeeExistsById(
   server: FastifyInstance,
   id: string,
 ) {
-  const count = await server.prisma.employee.count({
-    where: { id },
-  });
+  const count = await server.prisma.employee.count({ where: { id } });
   return count > 0;
 }

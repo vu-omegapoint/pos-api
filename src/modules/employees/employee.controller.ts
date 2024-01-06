@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import {
-  CreateOrUpdateEmployeeCoreInput,
+  CreateOrUpdateEmployeeInput,
   UpdateEmployeePermissionsInput,
   UpdateEmployeeScheduleInput,
 } from "./employee.schema";
@@ -10,7 +10,7 @@ import {
   deleteEmployee,
   findEmployeeById,
   findEmployees,
-  updateEmployeeCore,
+  updateEmployee,
   updateEmployeePermissions,
   updateEmployeeSchedule,
 } from "./employee.service";
@@ -52,7 +52,7 @@ export const getEmployeeByIdHandler =
 export const createEmployeeHandler =
   (server: FastifyInstance) =>
   async (
-    request: FastifyRequest<{ Body: CreateOrUpdateEmployeeCoreInput }>,
+    request: FastifyRequest<{ Body: CreateOrUpdateEmployeeInput }>,
     reply: FastifyReply,
   ) => {
     const { body } = request;
@@ -65,11 +65,11 @@ export const createEmployeeHandler =
     }
   };
 
-export const updateEmployeeCoreHandler =
+export const updateEmployeeHandler =
   (server: FastifyInstance) =>
   async (
     request: FastifyRequest<{
-      Body: CreateOrUpdateEmployeeCoreInput;
+      Body: CreateOrUpdateEmployeeInput;
       Params: RequestByIdParams;
     }>,
     reply: FastifyReply,
@@ -82,7 +82,7 @@ export const updateEmployeeCoreHandler =
           .code(404)
           .send({ message: `Employee '${params.id}' was not found` });
 
-      const employee = await updateEmployeeCore(server, params.id, body);
+      const employee = await updateEmployee(server, params.id, body);
       return reply.code(200).send(employee);
     } catch (e) {
       server.log.error(e);

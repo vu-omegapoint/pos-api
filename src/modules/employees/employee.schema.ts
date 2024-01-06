@@ -11,10 +11,6 @@ const employeeGenerated = {
   id: z.string().uuid(),
 };
 
-const createOrUpdateEmployeeCoreSchema = z.object({
-  ...employeeCore,
-});
-
 export enum PermissionLevels {
   read = "read",
   write = "write",
@@ -67,6 +63,12 @@ const workShiftSchema = z.object({
     .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
 });
 
+const createOrUpdateEmployeeSchema = z.object({
+  ...employeeCore,
+  schedule: z.array(workShiftSchema),
+  permissions: z.array(permissionSchema),
+});
+
 const updateEmployeeScheduleSchema = z.object({
   schedule: z.array(workShiftSchema),
 });
@@ -78,21 +80,17 @@ const employeeResponseSchema = z.object({
   permissions: z.array(permissionSchema),
 });
 const employeesResponseSchema = z.array(employeeResponseSchema);
-const updateEmployeeCoreResponseSchema = z.object({
-  ...employeeGenerated,
-  ...employeeCore,
-});
-const updatePermissionsResponseSchema = z.object({
+const updateEmployeePermissionsResponseSchema = z.object({
   ...employeeGenerated,
   permissions: z.array(permissionSchema),
 });
-const updateScheduleResponseSchema = z.object({
+const updateEmployeeScheduleResponseSchema = z.object({
   ...employeeGenerated,
   schedule: z.array(workShiftSchema),
 });
 
-export type CreateOrUpdateEmployeeCoreInput = z.infer<
-  typeof createOrUpdateEmployeeCoreSchema
+export type CreateOrUpdateEmployeeInput = z.infer<
+  typeof createOrUpdateEmployeeSchema
 >;
 export type UpdateEmployeePermissionsInput = z.infer<
   typeof updateEmployeePermissionsSchema
@@ -108,12 +106,11 @@ export const { schemas: employeeSchemas, $ref: $employeeRef } =
       workShiftSchema,
       employeeResponseSchema,
       employeesResponseSchema,
-      createOrUpdateEmployeeCoreSchema,
+      createOrUpdateEmployeeSchema,
       updateEmployeePermissionsSchema,
       updateEmployeeScheduleSchema,
-      updateEmployeeCoreResponseSchema,
-      updatePermissionsResponseSchema,
-      updateScheduleResponseSchema,
+      updateEmployeePermissionsResponseSchema,
+      updateEmployeeScheduleResponseSchema,
     },
     { $id: "EmployeeSchemas" },
   );

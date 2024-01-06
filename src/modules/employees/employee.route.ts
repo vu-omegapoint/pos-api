@@ -3,7 +3,7 @@ import {
   getEmployeesHandler,
   getEmployeeByIdHandler,
   createEmployeeHandler,
-  updateEmployeeCoreHandler,
+  updateEmployeeHandler,
   deleteEmployeeHandler,
   updateEmployeePermissionsHandler,
   updateEmployeeScheduleHandler,
@@ -48,7 +48,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
       schema: {
         tags: ["Employees"],
         summary: "Creates an employee.",
-        body: $employeeRef("createOrUpdateEmployeeCoreSchema"),
+        body: $employeeRef("createOrUpdateEmployeeSchema"),
         response: { 201: $employeeRef("employeeResponseSchema") },
       },
     },
@@ -62,14 +62,14 @@ export const employeeRoutes = (server: FastifyInstance) => {
         tags: ["Employees"],
         summary: "Edit an employee",
         params: $genericRef("requestByIdParams"),
-        body: $employeeRef("createOrUpdateEmployeeCoreSchema"),
+        body: $employeeRef("createOrUpdateEmployeeSchema"),
         response: {
-          200: $employeeRef("updateEmployeeCoreResponseSchema"),
+          200: $employeeRef("employeeResponseSchema"),
           404: $genericRef("errorResponse"),
         },
       },
     },
-    updateEmployeeCoreHandler(server),
+    updateEmployeeHandler(server),
   );
 
   server.put(
@@ -81,7 +81,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
         params: $genericRef("requestByIdParams"),
         body: $employeeRef("updateEmployeePermissionsSchema"),
         response: {
-          200: $employeeRef("updatePermissionsResponseSchema"),
+          200: $employeeRef("updateEmployeePermissionsResponseSchema"),
           404: $genericRef("errorResponse"),
         },
       },
@@ -98,7 +98,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
         params: $genericRef("requestByIdParams"),
         body: $employeeRef("updateEmployeeScheduleSchema"),
         response: {
-          200: $employeeRef("updateScheduleResponseSchema"),
+          200: $employeeRef("updateEmployeeScheduleResponseSchema"),
           404: $genericRef("errorResponse"),
         },
       },
