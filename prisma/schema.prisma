@@ -20,7 +20,7 @@ model ContactInfo {
   id       String    @id @default(uuid())
   email    String
   phone    String?
-  customer Customer? @ignore
+  customer Customer?
 
   @@unique([email, phone], name: "uniqueContactIdentifier")
 }
@@ -31,7 +31,7 @@ model Address {
   city     String
   state    String?
   zip      String?
-  customer Customer? @ignore
+  customer Customer?
 }
 
 model Employee {

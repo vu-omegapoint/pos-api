@@ -7,6 +7,7 @@ import FastifySwaggerUI from "@fastify/swagger-ui";
 import { Endpoints } from "./constants";
 import PrismaPlugin from "./prisma";
 import { customerRoutes, customerSchemas } from "./modules/customers";
+import { employeeRoutes, employeeSchemas } from "./modules/employees";
 import { genericSchemas } from "./modules/generic";
 
 // Load process.env from .env file.
@@ -51,9 +52,14 @@ void server.register(PrismaPlugin);
 
 // Register all routes
 void server.register(customerRoutes, { prefix: Endpoints.customers });
+void server.register(employeeRoutes, { prefix: Endpoints.employees });
 
 // Register all schemas.
-for (const schema of [...customerSchemas, ...genericSchemas]) {
+for (const schema of [
+  ...genericSchemas,
+  ...customerSchemas,
+  ...employeeSchemas,
+]) {
   server.addSchema(schema);
 }
 

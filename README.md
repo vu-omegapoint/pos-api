@@ -38,7 +38,7 @@ This project uses [`fastify`](https://fastify.dev). To learn more about this fra
 
 ## Swagger
 
-Once you run the server, swagger documentation can be accessed through [`localhost:8080/docs`](http://localhost:8080/docs).
+Once you run the server, swagger documentation can be accessed through [`localhost:8080/swagger`](http://localhost:8080/swagger).
 
 For this swagger documentation we are using fastify plugins [`@fastify/fastify-swagger`](https://github.com/fastify/fastify-swagger) and [`@fastify/fastify-swagger-ui`](https://github.com/fastify/fastify-swagger-ui).
 
