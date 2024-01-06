@@ -20,7 +20,7 @@ model ContactInfo {
   id       String    @id @default(uuid())
   email    String
   phone    String?
-  customer Customer?
+  customer Customer? @ignore
 
   @@unique([email, phone], name: "uniqueContactIdentifier")
 }
@@ -31,5 +31,29 @@ model Address {
   city     String
   state    String?
   zip      String?
-  customer Customer?
+  customer Customer? @ignore
+}
+
+model Employee {
+  id          String       @id @default(uuid())
+  name        String
+  permissions Permission[]
+  schedule    WorkShift[]
+}
+
+model Permission {
+  name      String     @id
+  // Prisma doesn't support enums for SQLite. 
+  // https://github.com/prisma/prisma/issues/2219
+  level     String
+  employees Employee[]
+}
+
+model WorkShift {
+  weekday   String     @id
+  // Worth a read for how Prisma handles dates in SQLite.
+  // https://ctankersley.com/2023/07/27/prisma-and-sqlite-datetime-sucks/
+  startTime DateTime
+  endTime   DateTime
+  employees Employee[]
 }
