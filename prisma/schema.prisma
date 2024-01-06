@@ -51,9 +51,7 @@ model Permission {
 
 model WorkShift {
   weekday   String     @id
-  // Worth a read for how Prisma handles dates in SQLite.
-  // https://ctankersley.com/2023/07/27/prisma-and-sqlite-datetime-sucks/
-  startTime DateTime
-  endTime   DateTime
+  startTime String
+  endTime   String
   employees Employee[]
 }

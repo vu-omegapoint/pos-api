@@ -21,7 +21,7 @@ export enum PermissionLevels {
   admin = "admin",
 }
 
-const permissionObject = {
+const permissionSchema = z.object({
   name: z.string({
     required_error: "Permission name is required",
     invalid_type_error: "Permission name must be a string",
@@ -32,9 +32,7 @@ const permissionObject = {
       PermissionLevels,
     ).join(", ")}`,
   }),
-};
-
-const permissionSchema = z.object(permissionObject);
+});
 const updateEmployeePermissionsSchema = z.object({
   permissions: z.array(permissionSchema),
 });
@@ -48,23 +46,27 @@ export enum Weekdays {
   saturday = "saturday",
   sunday = "sunday",
 }
-const workShiftObject = {
+const workShiftSchema = z.object({
   weekday: z.nativeEnum(Weekdays, {
     required_error: "Weekday is required",
     invalid_type_error: `Weekday must match one of the allowed string values: ${Object.values(
       Weekdays,
     ).join(", ")}`,
   }),
-  startTime: z.date({
+  startTime: z
+    .string({
     required_error: "Start time is required",
-    invalid_type_error: "Start time must be a valid dateTime value",
-  }),
-  endTime: z.date({
+      invalid_type_error: "Start time must be a valid HH:MM time value",
+    })
+    .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
+  endTime: z
+    .string({
     required_error: "End time is required",
-    invalid_type_error: "End time must be a valid dateTime value",
-  }),
-};
-const workShiftSchema = z.object(workShiftObject);
+      invalid_type_error: "End time must be a valid HH:MM time value",
+    })
+    .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
+});
+
 const updateEmployeeScheduleSchema = z.object({
   schedule: z.array(workShiftSchema),
 });

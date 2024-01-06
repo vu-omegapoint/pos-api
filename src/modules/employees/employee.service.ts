@@ -76,10 +76,10 @@ export async function updateEmployeeSchedule(
     data: {
       schedule: {
         upsert: [
-          ...input.schedule.map((p) => ({
-            update: p,
-            create: p,
-            where: { weekday: p.weekday },
+          ...input.schedule.map((s) => ({
+            update: s,
+            create: s,
+            where: { weekday: s.weekday },
           })),
         ],
       },

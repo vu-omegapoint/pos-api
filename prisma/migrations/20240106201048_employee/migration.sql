@@ -13,8 +13,8 @@ CREATE TABLE "Permission" (
 -- CreateTable
 CREATE TABLE "WorkShift" (
     "weekday" TEXT NOT NULL PRIMARY KEY,
-    "startTime" DATETIME NOT NULL,
-    "endTime" DATETIME NOT NULL
+    "startTime" TEXT NOT NULL,
+    "endTime" TEXT NOT NULL
 );
 
 -- CreateTable
