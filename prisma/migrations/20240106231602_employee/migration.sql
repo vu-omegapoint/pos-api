@@ -1,3 +1,6 @@
+-- DropIndex
+DROP INDEX "ContactInfo_email_phone_key";
+
 -- CreateTable
 CREATE TABLE "Employee" (
     "id" TEXT NOT NULL PRIMARY KEY,
