@@ -55,13 +55,13 @@ const workShiftSchema = z.object({
   }),
   startTime: z
     .string({
-    required_error: "Start time is required",
+      required_error: "Start time is required",
       invalid_type_error: "Start time must be a valid HH:MM time value",
     })
     .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
   endTime: z
     .string({
-    required_error: "End time is required",
+      required_error: "End time is required",
       invalid_type_error: "End time must be a valid HH:MM time value",
     })
     .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
