@@ -21,8 +21,6 @@ model ContactInfo {
   email    String
   phone    String?
   customer Customer?
-
-  @@unique([email, phone], name: "uniqueContactIdentifier")
 }
 
 model Address {

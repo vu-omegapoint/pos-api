@@ -29,8 +29,13 @@ const permissionSchema = z.object({
     ).join(", ")}`,
   }),
 });
+const permissionsSchema = z
+  .array(permissionSchema)
+  .refine((items) => new Set(items.map((x) => x.name)).size === items.length, {
+    message: "Permission name must be unique",
+  });
 const updateEmployeePermissionsSchema = z.object({
-  permissions: z.array(permissionSchema),
+  permissions: permissionsSchema,
 });
 
 export enum Weekdays {
@@ -42,51 +47,64 @@ export enum Weekdays {
   saturday = "saturday",
   sunday = "sunday",
 }
-const workShiftSchema = z.object({
-  weekday: z.nativeEnum(Weekdays, {
-    required_error: "Weekday is required",
-    invalid_type_error: `Weekday must match one of the allowed string values: ${Object.values(
-      Weekdays,
-    ).join(", ")}`,
-  }),
-  startTime: z
-    .string({
-      required_error: "Start time is required",
-      invalid_type_error: "Start time must be a valid HH:MM time value",
-    })
-    .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
-  endTime: z
-    .string({
-      required_error: "End time is required",
-      invalid_type_error: "End time must be a valid HH:MM time value",
-    })
-    .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
-});
+const workShiftSchema = z
+  .object({
+    weekday: z.nativeEnum(Weekdays, {
+      required_error: "Weekday is required",
+      invalid_type_error: `Weekday must match one of the allowed string values: ${Object.values(
+        Weekdays,
+      ).join(", ")}`,
+    }),
+    startTime: z
+      .string({
+        required_error: "Start time is required",
+        invalid_type_error: "Start time must be a valid HH:MM time value",
+      })
+      .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
+    endTime: z
+      .string({
+        required_error: "End time is required",
+        invalid_type_error: "End time must be a valid HH:MM time value",
+      })
+      .regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
+  })
+  .refine((x) => x.startTime < x.endTime, {
+    message: "Start time must be before end time",
+  });
+
+const scheduleSchema = z
+  .array(workShiftSchema)
+  .refine(
+    (items) => new Set(items.map((x) => x.weekday)).size === items.length,
+    {
+      message: "Weekday name must be unique",
+    },
+  );
 
 const createOrUpdateEmployeeSchema = z.object({
   ...employeeCore,
-  schedule: z.array(workShiftSchema),
-  permissions: z.array(permissionSchema),
+  schedule: scheduleSchema,
+  permissions: permissionsSchema,
 });
 
 const updateEmployeeScheduleSchema = z.object({
-  schedule: z.array(workShiftSchema),
+  schedule: scheduleSchema,
 });
 
 const employeeResponseSchema = z.object({
   ...employeeGenerated,
   ...employeeCore,
-  schedule: z.array(workShiftSchema),
-  permissions: z.array(permissionSchema),
+  schedule: scheduleSchema,
+  permissions: permissionsSchema,
 });
 const employeesResponseSchema = z.array(employeeResponseSchema);
 const updateEmployeePermissionsResponseSchema = z.object({
   ...employeeGenerated,
-  permissions: z.array(permissionSchema),
+  permissions: permissionsSchema,
 });
 const updateEmployeeScheduleResponseSchema = z.object({
   ...employeeGenerated,
-  schedule: z.array(workShiftSchema),
+  schedule: scheduleSchema,
 });
 
 export type CreateOrUpdateEmployeeInput = z.infer<
