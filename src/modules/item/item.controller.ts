@@ -13,13 +13,8 @@ import { RequestByIdParams } from "../generic";
 export const getItemsHandler =
   (server: FastifyInstance) =>
   async (_request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const items = await findItems(server);
-      return reply.code(200).send(items);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500);
-    }
+    const items = await findItems(server);
+    return reply.code(200).send(items);
   };
 
 export const getItemByIdHandler =
@@ -29,18 +24,13 @@ export const getItemByIdHandler =
     reply: FastifyReply,
   ) => {
     const { params } = request;
-    try {
-      const item = await findItemById(server, params.id);
-      if (!item)
-        return reply
-          .code(404)
-          .send({ message: `Item '${params.id}' was not found` });
+    const item = await findItemById(server, params.id);
+    if (!item)
+      return reply
+        .code(404)
+        .send({ message: `Item '${params.id}' was not found` });
 
-      return reply.code(200).send(item);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500);
-    }
+    return reply.code(200).send(item);
   };
 
 export const createItemHandler =
@@ -50,13 +40,8 @@ export const createItemHandler =
     reply: FastifyReply,
   ) => {
     const { body } = request;
-    try {
-      const item = await createItem(server, body);
-      return reply.code(201).send(item);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500);
-    }
+    const item = await createItem(server, body);
+    return reply.code(201).send(item);
   };
 
 export const updateItemHandler =
@@ -69,19 +54,14 @@ export const updateItemHandler =
     reply: FastifyReply,
   ) => {
     const { body, params } = request;
-    try {
-      const itemExists = await checkIfItemExistsById(server, params.id);
-      if (!itemExists)
-        return reply
-          .code(404)
-          .send({ message: `Item '${params.id}' was not found` });
+    const itemExists = await checkIfItemExistsById(server, params.id);
+    if (!itemExists)
+      return reply
+        .code(404)
+        .send({ message: `Item '${params.id}' was not found` });
 
-      const item = await updateItem(server, params.id, body);
-      return reply.code(200).send(item);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500);
-    }
+    const item = await updateItem(server, params.id, body);
+    return reply.code(200).send(item);
   };
 
 export const deleteItemHandler =
@@ -91,17 +71,12 @@ export const deleteItemHandler =
     reply: FastifyReply,
   ) => {
     const { params } = request;
-    try {
-      const itemExists = await checkIfItemExistsById(server, params.id);
-      if (!itemExists)
-        return reply
-          .code(404)
-          .send({ message: `Item '${params.id}' was not found` });
+    const itemExists = await checkIfItemExistsById(server, params.id);
+    if (!itemExists)
+      return reply
+        .code(404)
+        .send({ message: `Item '${params.id}' was not found` });
 
-      await deleteItem(server, params.id);
-      return reply.code(204).send();
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500);
-    }
+    await deleteItem(server, params.id);
+    return reply.code(204).send();
   };
