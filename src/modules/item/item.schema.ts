@@ -11,7 +11,7 @@ const itemGenerated = {
   id: z.string().uuid(),
 };
 
-const createOrUpdateItemSchema = z.object({
+export const createOrUpdateItemSchema = z.object({
   ...itemCore,
 });
 

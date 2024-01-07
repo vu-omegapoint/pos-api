@@ -6,8 +6,12 @@ import {
   getItemsHandler,
   updateItemHandler,
 } from ".";
-import { $itemRef } from "./item.schema";
-import { $genericRef } from "../generic";
+import { $itemRef, createOrUpdateItemSchema } from "./item.schema";
+import {
+  $genericRef,
+  preValidationHandler,
+  requestByIdParams,
+} from "../generic";
 
 export const itemRoutes = (server: FastifyInstance) => {
   server.get(
@@ -36,6 +40,7 @@ export const itemRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
+      preValidation: preValidationHandler(requestByIdParams),
     },
     getItemByIdHandler(server),
   );
@@ -49,6 +54,7 @@ export const itemRoutes = (server: FastifyInstance) => {
         body: $itemRef("createOrUpdateItemSchema"),
         response: { 201: $itemRef("itemResponseSchema") },
       },
+      preValidation: preValidationHandler(undefined, createOrUpdateItemSchema),
     },
     createItemHandler(server),
   );
@@ -66,6 +72,10 @@ export const itemRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
+      preValidation: preValidationHandler(
+        requestByIdParams,
+        createOrUpdateItemSchema,
+      ),
     },
     updateItemHandler(server),
   );
@@ -82,6 +92,7 @@ export const itemRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
+      preValidation: preValidationHandler(requestByIdParams),
     },
     deleteItemHandler(server),
   );

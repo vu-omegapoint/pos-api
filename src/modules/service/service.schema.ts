@@ -12,7 +12,7 @@ const serviceGenerated = {
   id: z.string().uuid(),
 };
 
-const createOrUpdateServiceSchema = z.object({
+export const createOrUpdateServiceSchema = z.object({
   ...serviceCore,
 });
 
