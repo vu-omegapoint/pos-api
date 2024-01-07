@@ -88,7 +88,7 @@ const employeeGenerated = {
   id: z.string().uuid(),
 };
 
-const createOrUpdateEmployeeSchema = z.object({
+export const createOrUpdateEmployeeSchema = z.object({
   ...employeeCore,
   schedule: scheduleSchema,
   permissions: permissionsSchema,
@@ -102,7 +102,7 @@ const employeeResponseSchema = z.object({
 });
 const employeesResponseSchema = z.array(employeeResponseSchema);
 
-const updateEmployeeScheduleSchema = z.object({
+export const updateEmployeeScheduleSchema = z.object({
   schedule: scheduleSchema,
 });
 const updateEmployeeScheduleResponseSchema = z.object({
@@ -110,7 +110,7 @@ const updateEmployeeScheduleResponseSchema = z.object({
   schedule: scheduleSchema,
 });
 
-const updateEmployeePermissionsSchema = z.object({
+export const updateEmployeePermissionsSchema = z.object({
   permissions: permissionsSchema,
 });
 const updateEmployeePermissionsResponseSchema = z.object({

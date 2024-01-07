@@ -38,7 +38,7 @@ const customerGenerated = {
   id: z.string().uuid(),
 };
 
-const createOrUpdateCustomerSchema = z.object({
+export const createOrUpdateCustomerSchema = z.object({
   ...customerCore,
 });
 

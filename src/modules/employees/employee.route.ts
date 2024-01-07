@@ -8,8 +8,13 @@ import {
   updateEmployeePermissionsHandler,
   updateEmployeeScheduleHandler,
 } from "./employee.controller";
-import { $employeeRef } from "./employee.schema";
-import { $genericRef } from "../generic";
+import {
+  $employeeRef,
+  createOrUpdateEmployeeSchema,
+  updateEmployeePermissionsSchema,
+  updateEmployeeScheduleSchema,
+} from "./employee.schema";
+import { $genericRef, bodyValidationPreHandler } from "../generic";
 
 export const employeeRoutes = (server: FastifyInstance) => {
   server.get(
@@ -49,8 +54,12 @@ export const employeeRoutes = (server: FastifyInstance) => {
         tags: ["Employees"],
         summary: "Creates an employee.",
         body: $employeeRef("createOrUpdateEmployeeSchema"),
-        response: { 201: $employeeRef("employeeResponseSchema") },
+        response: {
+          201: $employeeRef("employeeResponseSchema"),
+          400: $genericRef("validationErrorResponse"),
+        },
       },
+      preHandler: bodyValidationPreHandler(createOrUpdateEmployeeSchema),
     },
     createEmployeeHandler(server),
   );
@@ -65,9 +74,11 @@ export const employeeRoutes = (server: FastifyInstance) => {
         body: $employeeRef("createOrUpdateEmployeeSchema"),
         response: {
           200: $employeeRef("employeeResponseSchema"),
+          400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
+      preHandler: bodyValidationPreHandler(createOrUpdateEmployeeSchema),
     },
     updateEmployeeHandler(server),
   );
@@ -82,9 +93,11 @@ export const employeeRoutes = (server: FastifyInstance) => {
         body: $employeeRef("updateEmployeePermissionsSchema"),
         response: {
           200: $employeeRef("updateEmployeePermissionsResponseSchema"),
+          400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
+      preHandler: bodyValidationPreHandler(updateEmployeePermissionsSchema),
     },
     updateEmployeePermissionsHandler(server),
   );
@@ -99,9 +112,11 @@ export const employeeRoutes = (server: FastifyInstance) => {
         body: $employeeRef("updateEmployeeScheduleSchema"),
         response: {
           200: $employeeRef("updateEmployeeScheduleResponseSchema"),
+          400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
+      preHandler: bodyValidationPreHandler(updateEmployeeScheduleSchema),
     },
     updateEmployeeScheduleHandler(server),
   );
