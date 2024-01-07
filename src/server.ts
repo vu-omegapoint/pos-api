@@ -9,6 +9,8 @@ import PrismaPlugin from "./prisma";
 import { customerRoutes, customerSchemas } from "./modules/customers";
 import { employeeRoutes, employeeSchemas } from "./modules/employees";
 import { genericSchemas } from "./modules/generic";
+import { itemRoutes, itemSchemas } from "./modules/item";
+import { serviceSchemas, serviceRoutes } from "./modules/service";
 
 // Load process.env from .env file.
 dotenv.config();
@@ -52,12 +54,16 @@ void server.register(PrismaPlugin);
 
 // Register all routes
 void server.register(customerRoutes, { prefix: Endpoints.customers });
+void server.register(itemRoutes, { prefix: Endpoints.items });
+void server.register(serviceRoutes, { prefix: Endpoints.services });
 void server.register(employeeRoutes, { prefix: Endpoints.employees });
 
 // Register all schemas.
 for (const schema of [
   ...genericSchemas,
   ...customerSchemas,
+  ...itemSchemas,
+  ...serviceSchemas,
   ...employeeSchemas,
 ]) {
   server.addSchema(schema);

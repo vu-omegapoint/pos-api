@@ -12,7 +12,9 @@ export const preValidationHandler =
       if (!resultParams.success) {
         return reply.code(400).send({
           message: "At least one validation error has occurred.",
-          issues: resultParams.error.errors.map((x) => x.message),
+          issues: resultParams.error.errors.map(
+            (x) => `${x.path.join("/")}: ${x.message}`,
+          ),
         });
       }
     }
@@ -21,7 +23,9 @@ export const preValidationHandler =
       if (!resultBody.success) {
         return reply.code(400).send({
           message: "At least one validation error has occurred.",
-          issues: resultBody.error.errors.map((x) => x.message),
+          issues: resultBody.error.errors.map(
+            (x) => `${x.path.join("/")}: ${x.message}`,
+          ),
         });
       }
     }

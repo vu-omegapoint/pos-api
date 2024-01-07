@@ -1,99 +1,99 @@
 import { FastifyInstance } from "fastify";
 import {
-  getCustomersHandler,
-  getCustomerByIdHandler,
-  createCustomerHandler,
-  updateCustomerHandler,
-  deleteCustomerHandler,
-} from "./customer.controller";
-import { $customerRef, createOrUpdateCustomerSchema } from "./customer.schema";
+  createServiceHandler,
+  deleteServiceHandler,
+  getServiceByIdHandler,
+  getServicesHandler,
+  updateServiceHandler,
+} from ".";
+import { $serviceRef, createOrUpdateServiceSchema } from "./service.schema";
 import {
   $genericRef,
   preValidationHandler,
   requestByIdParams,
 } from "../generic";
 
-export const customerRoutes = (server: FastifyInstance) => {
+export const serviceRoutes = (server: FastifyInstance) => {
   server.get(
     "/",
     {
       schema: {
-        tags: ["Customers"],
-        summary: "List all customers",
+        tags: ["Services"],
+        summary: "List all services",
         response: {
-          200: $customerRef("customersResponseSchema"),
+          200: $serviceRef("servicesResponseSchema"),
         },
       },
     },
-    getCustomersHandler(server),
+    getServicesHandler(server),
   );
 
   server.get(
     "/:id",
     {
       schema: {
-        tags: ["Customers"],
-        summary: "Get a specific customer",
+        tags: ["Services"],
+        summary: "Get a specific service",
         params: $genericRef("requestByIdParams"),
         response: {
-          200: $customerRef("customerResponseSchema"),
+          200: $serviceRef("serviceResponseSchema"),
           400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
       preValidation: preValidationHandler(requestByIdParams),
     },
-    getCustomerByIdHandler(server),
+    getServiceByIdHandler(server),
   );
 
   server.post(
     "/",
     {
       schema: {
-        tags: ["Customers"],
-        summary: "Creates a customer.",
-        body: $customerRef("createOrUpdateCustomerSchema"),
+        tags: ["Services"],
+        summary: "Creates an service.",
+        body: $serviceRef("createOrUpdateServiceSchema"),
         response: {
-          201: $customerRef("customerResponseSchema"),
+          201: $serviceRef("serviceResponseSchema"),
           400: $genericRef("validationErrorResponse"),
         },
       },
       preValidation: preValidationHandler(
         undefined,
-        createOrUpdateCustomerSchema,
+        createOrUpdateServiceSchema,
       ),
     },
-    createCustomerHandler(server),
+    createServiceHandler(server),
   );
 
   server.put(
     "/:id",
     {
       schema: {
-        tags: ["Customers"],
-        summary: "Edit a customer",
+        tags: ["Services"],
+        summary: "Edit an service",
         params: $genericRef("requestByIdParams"),
-        body: $customerRef("createOrUpdateCustomerSchema"),
+        body: $serviceRef("createOrUpdateServiceSchema"),
         response: {
-          200: $customerRef("customerResponseSchema"),
+          200: $serviceRef("serviceResponseSchema"),
           400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
       preValidation: preValidationHandler(
         requestByIdParams,
-        createOrUpdateCustomerSchema,
+        createOrUpdateServiceSchema,
       ),
     },
-    updateCustomerHandler(server),
+    updateServiceHandler(server),
   );
 
   server.delete(
     "/:id",
     {
       schema: {
-        tags: ["Customers"],
-        summary: "Delete a customer",
+        tags: ["Services"],
+        summary: "Delete an service",
         params: $genericRef("requestByIdParams"),
         response: {
           204: $genericRef("noContentResponse"),
@@ -103,7 +103,7 @@ export const customerRoutes = (server: FastifyInstance) => {
       },
       preValidation: preValidationHandler(requestByIdParams),
     },
-    deleteCustomerHandler(server),
+    deleteServiceHandler(server),
   );
 
   return Promise.resolve();
