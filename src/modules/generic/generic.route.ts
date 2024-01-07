@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from "fastify";
 import z from "zod";
 
-export const bodyValidationPreHandler =
+export const bodyPreValidationHandler =
   <TRequest extends FastifyRequest, TReply extends FastifyReply>(
     schema: z.AnyZodObject,
   ) =>

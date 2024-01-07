@@ -7,7 +7,7 @@ import {
   deleteCustomerHandler,
 } from "./customer.controller";
 import { $customerRef, createOrUpdateCustomerSchema } from "./customer.schema";
-import { $genericRef, bodyValidationPreHandler } from "../generic";
+import { $genericRef, bodyPreValidationHandler } from "../generic";
 
 export const customerRoutes = (server: FastifyInstance) => {
   server.get(
@@ -49,7 +49,7 @@ export const customerRoutes = (server: FastifyInstance) => {
         body: $customerRef("createOrUpdateCustomerSchema"),
         response: { 201: $customerRef("customerResponseSchema") },
       },
-      preHandler: bodyValidationPreHandler(createOrUpdateCustomerSchema),
+      preValidation: bodyPreValidationHandler(createOrUpdateCustomerSchema),
     },
     createCustomerHandler(server),
   );
@@ -67,7 +67,7 @@ export const customerRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
-      preHandler: bodyValidationPreHandler(createOrUpdateCustomerSchema),
+      preValidation: bodyPreValidationHandler(createOrUpdateCustomerSchema),
     },
     updateCustomerHandler(server),
   );

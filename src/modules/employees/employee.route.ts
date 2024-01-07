@@ -14,7 +14,7 @@ import {
   updateEmployeePermissionsSchema,
   updateEmployeeScheduleSchema,
 } from "./employee.schema";
-import { $genericRef, bodyValidationPreHandler } from "../generic";
+import { $genericRef, bodyPreValidationHandler } from "../generic";
 
 export const employeeRoutes = (server: FastifyInstance) => {
   server.get(
@@ -59,7 +59,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
           400: $genericRef("validationErrorResponse"),
         },
       },
-      preHandler: bodyValidationPreHandler(createOrUpdateEmployeeSchema),
+      preValidation: bodyPreValidationHandler(createOrUpdateEmployeeSchema),
     },
     createEmployeeHandler(server),
   );
@@ -78,7 +78,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
-      preHandler: bodyValidationPreHandler(createOrUpdateEmployeeSchema),
+      preValidation: bodyPreValidationHandler(createOrUpdateEmployeeSchema),
     },
     updateEmployeeHandler(server),
   );
@@ -97,7 +97,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
-      preHandler: bodyValidationPreHandler(updateEmployeePermissionsSchema),
+      preValidation: bodyPreValidationHandler(updateEmployeePermissionsSchema),
     },
     updateEmployeePermissionsHandler(server),
   );
@@ -116,7 +116,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
-      preHandler: bodyValidationPreHandler(updateEmployeeScheduleSchema),
+      preValidation: bodyPreValidationHandler(updateEmployeeScheduleSchema),
     },
     updateEmployeeScheduleHandler(server),
   );
