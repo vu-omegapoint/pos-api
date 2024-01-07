@@ -40,3 +40,11 @@ model Item {
   description String?
   price       Decimal
 }
+
+model Service {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal
+  duration    Decimal
+}
