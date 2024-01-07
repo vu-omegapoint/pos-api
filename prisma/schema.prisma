@@ -33,3 +33,10 @@ model Address {
   zip      String?
   customer Customer?
 }
+
+model Item {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal
+}
