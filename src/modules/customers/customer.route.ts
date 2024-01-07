@@ -37,6 +37,7 @@ export const customerRoutes = (server: FastifyInstance) => {
         params: $genericRef("requestByIdParams"),
         response: {
           200: $customerRef("customerResponseSchema"),
+          400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
@@ -96,6 +97,7 @@ export const customerRoutes = (server: FastifyInstance) => {
         params: $genericRef("requestByIdParams"),
         response: {
           204: $genericRef("noContentResponse"),
+          400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
