@@ -74,16 +74,6 @@ server.addHook("onClose", (_instance, done) => {
   done();
 });
 
-// Add request cancellation handling.
-server.addHook("onRequest", (request, _reply, done) => {
-  request.raw.on("close", () => {
-    if (request.raw.destroyed) {
-      request.log.info("Request has been cancelled");
-    }
-  });
-  done();
-});
-
 // Start listening.
 server.listen(
   { port: process.env.PORT ? parseInt(process.env.PORT) : 3000 },
