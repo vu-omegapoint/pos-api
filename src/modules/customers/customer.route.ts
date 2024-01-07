@@ -6,8 +6,12 @@ import {
   updateCustomerHandler,
   deleteCustomerHandler,
 } from "./customer.controller";
-import { $customerRef } from "./customer.schema";
-import { $genericRef } from "../generic";
+import { $customerRef, createOrUpdateCustomerSchema } from "./customer.schema";
+import {
+  $genericRef,
+  preValidationHandler,
+  requestByIdParams,
+} from "../generic";
 
 export const customerRoutes = (server: FastifyInstance) => {
   server.get(
@@ -36,6 +40,7 @@ export const customerRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
+      preValidation: preValidationHandler(requestByIdParams),
     },
     getCustomerByIdHandler(server),
   );
@@ -49,6 +54,10 @@ export const customerRoutes = (server: FastifyInstance) => {
         body: $customerRef("createOrUpdateCustomerSchema"),
         response: { 201: $customerRef("customerResponseSchema") },
       },
+      preValidation: preValidationHandler(
+        undefined,
+        createOrUpdateCustomerSchema,
+      ),
     },
     createCustomerHandler(server),
   );
@@ -66,6 +75,10 @@ export const customerRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
+      preValidation: preValidationHandler(
+        requestByIdParams,
+        createOrUpdateCustomerSchema,
+      ),
     },
     updateCustomerHandler(server),
   );
@@ -82,6 +95,7 @@ export const customerRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
+      preValidation: preValidationHandler(requestByIdParams),
     },
     deleteCustomerHandler(server),
   );

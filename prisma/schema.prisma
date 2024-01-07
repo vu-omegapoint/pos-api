@@ -21,8 +21,6 @@ model ContactInfo {
   email    String
   phone    String?
   customer Customer?
-
-  @@unique([email, phone], name: "uniqueContactIdentifier")
 }
 
 model Address {
@@ -47,4 +45,32 @@ model Service {
   description String?
   price       Decimal
   duration    Decimal
+}
+
+model Employee {
+  id          String       @id @default(uuid())
+  name        String
+  permissions Permission[]
+  schedule    WorkShift[]
+}
+
+model Permission {
+  name       String
+  // Prisma doesn't support enums for SQLite. 
+  // https://github.com/prisma/prisma/issues/2219
+  level      String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  employeeId String
+
+  @@id([name, employeeId])
+}
+
+model WorkShift {
+  weekday    String
+  startTime  String
+  endTime    String
+  employee   Employee @relation(references: [id], onDelete: Cascade, onUpdate: Cascade, fields: [employeeId])
+  employeeId String
+
+  @@id([weekday, employeeId])
 }
