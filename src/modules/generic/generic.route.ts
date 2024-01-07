@@ -1,15 +1,29 @@
 import { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from "fastify";
 import z from "zod";
 
-export const bodyPreValidationHandler =
+export const preValidationHandler =
   <TRequest extends FastifyRequest, TReply extends FastifyReply>(
-    schema: z.AnyZodObject,
+    paramsSchema?: z.AnyZodObject,
+    bodySchema?: z.AnyZodObject,
   ) =>
   (request: TRequest, reply: TReply, done: HookHandlerDoneFunction) => {
-    const result = schema.safeParse(request.body);
-    if (result.success) return done();
-    return reply.code(400).send({
-      message: "At least one validation error has occurred.",
-      issues: result.error.errors.map((x) => x.message),
-    });
+    if (paramsSchema) {
+      const resultParams = paramsSchema.safeParse(request.params);
+      if (!resultParams.success) {
+        return reply.code(400).send({
+          message: "At least one validation error has occurred.",
+          issues: resultParams.error.errors.map((x) => x.message),
+        });
+      }
+    }
+    if (bodySchema) {
+      const resultBody = bodySchema.safeParse(request.body);
+      if (!resultBody.success) {
+        return reply.code(400).send({
+          message: "At least one validation error has occurred.",
+          issues: resultBody.error.errors.map((x) => x.message),
+        });
+      }
+    }
+    return done();
   };

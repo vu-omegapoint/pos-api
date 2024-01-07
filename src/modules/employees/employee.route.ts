@@ -14,7 +14,11 @@ import {
   updateEmployeePermissionsSchema,
   updateEmployeeScheduleSchema,
 } from "./employee.schema";
-import { $genericRef, bodyPreValidationHandler } from "../generic";
+import {
+  $genericRef,
+  preValidationHandler,
+  requestByIdParams,
+} from "../generic";
 
 export const employeeRoutes = (server: FastifyInstance) => {
   server.get(
@@ -43,6 +47,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
+      preValidation: preValidationHandler(requestByIdParams),
     },
     getEmployeeByIdHandler(server),
   );
@@ -59,7 +64,10 @@ export const employeeRoutes = (server: FastifyInstance) => {
           400: $genericRef("validationErrorResponse"),
         },
       },
-      preValidation: bodyPreValidationHandler(createOrUpdateEmployeeSchema),
+      preValidation: preValidationHandler(
+        undefined,
+        createOrUpdateEmployeeSchema,
+      ),
     },
     createEmployeeHandler(server),
   );
@@ -78,7 +86,10 @@ export const employeeRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
-      preValidation: bodyPreValidationHandler(createOrUpdateEmployeeSchema),
+      preValidation: preValidationHandler(
+        requestByIdParams,
+        createOrUpdateEmployeeSchema,
+      ),
     },
     updateEmployeeHandler(server),
   );
@@ -97,7 +108,10 @@ export const employeeRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
-      preValidation: bodyPreValidationHandler(updateEmployeePermissionsSchema),
+      preValidation: preValidationHandler(
+        requestByIdParams,
+        updateEmployeePermissionsSchema,
+      ),
     },
     updateEmployeePermissionsHandler(server),
   );
@@ -116,7 +130,10 @@ export const employeeRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
-      preValidation: bodyPreValidationHandler(updateEmployeeScheduleSchema),
+      preValidation: preValidationHandler(
+        requestByIdParams,
+        updateEmployeeScheduleSchema,
+      ),
     },
     updateEmployeeScheduleHandler(server),
   );
@@ -133,6 +150,7 @@ export const employeeRoutes = (server: FastifyInstance) => {
           404: $genericRef("errorResponse"),
         },
       },
+      preValidation: preValidationHandler(requestByIdParams),
     },
     deleteEmployeeHandler(server),
   );

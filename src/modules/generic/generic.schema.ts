@@ -1,7 +1,7 @@
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 
-const requestByIdParams = z.object({
+export const requestByIdParams = z.object({
   id: z
     .string({
       required_error: "Id is required",
