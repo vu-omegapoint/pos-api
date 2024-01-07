@@ -75,13 +75,18 @@ server.addHook("onClose", (_instance, done) => {
 });
 
 // Add request cancellation handling.
-server.addHook("onRequest", (request, _message, done) => {
+server.addHook("onRequest", (request, _reply, done) => {
   request.raw.on("close", () => {
     if (request.raw.destroyed) {
       request.log.info("Request has been cancelled");
     }
   });
   done();
+});
+
+server.setErrorHandler(async (error, _request, reply) => {
+  server.log.error(error);
+  return await reply.code(500).send();
 });
 
 // Start listening.

@@ -13,13 +13,8 @@ import { RequestByIdParams } from "../generic";
 export const getCustomersHandler =
   (server: FastifyInstance) =>
   async (_request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const customers = await findCustomers(server);
-      return reply.code(200).send(customers);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    const customers = await findCustomers(server);
+    return reply.code(200).send(customers);
   };
 
 export const getCustomerByIdHandler =
@@ -29,18 +24,13 @@ export const getCustomerByIdHandler =
     reply: FastifyReply,
   ) => {
     const { params } = request;
-    try {
-      const customer = await findCustomerById(server, params.id);
-      if (!customer)
-        return reply
-          .code(404)
-          .send({ message: `Customer '${params.id}' was not found` });
+    const customer = await findCustomerById(server, params.id);
+    if (!customer)
+      return reply
+        .code(404)
+        .send({ message: `Customer '${params.id}' was not found` });
 
-      return reply.code(200).send(customer);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    return reply.code(200).send(customer);
   };
 
 export const createCustomerHandler =
@@ -50,13 +40,8 @@ export const createCustomerHandler =
     reply: FastifyReply,
   ) => {
     const { body } = request;
-    try {
-      const customer = await createCustomer(server, body);
-      return reply.code(201).send(customer);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    const customer = await createCustomer(server, body);
+    return reply.code(201).send(customer);
   };
 
 export const updateCustomerHandler =
@@ -69,19 +54,14 @@ export const updateCustomerHandler =
     reply: FastifyReply,
   ) => {
     const { body, params } = request;
-    try {
-      const customerExists = await checkIfCustomerExistsById(server, params.id);
-      if (!customerExists)
-        return reply
-          .code(404)
-          .send({ message: `Customer '${params.id}' was not found` });
+    const customerExists = await checkIfCustomerExistsById(server, params.id);
+    if (!customerExists)
+      return reply
+        .code(404)
+        .send({ message: `Customer '${params.id}' was not found` });
 
-      const customer = await updateCustomer(server, params.id, body);
-      return reply.code(200).send(customer);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    const customer = await updateCustomer(server, params.id, body);
+    return reply.code(200).send(customer);
   };
 
 export const deleteCustomerHandler =
@@ -91,17 +71,12 @@ export const deleteCustomerHandler =
     reply: FastifyReply,
   ) => {
     const { params } = request;
-    try {
-      const customerExists = await checkIfCustomerExistsById(server, params.id);
-      if (!customerExists)
-        return reply
-          .code(404)
-          .send({ message: `Customer '${params.id}' was not found` });
+    const customerExists = await checkIfCustomerExistsById(server, params.id);
+    if (!customerExists)
+      return reply
+        .code(404)
+        .send({ message: `Customer '${params.id}' was not found` });
 
-      await deleteCustomer(server, params.id);
-      return reply.code(204).send();
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    await deleteCustomer(server, params.id);
+    return reply.code(204).send();
   };

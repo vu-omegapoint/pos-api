@@ -19,13 +19,8 @@ import { RequestByIdParams } from "../generic";
 export const getEmployeesHandler =
   (server: FastifyInstance) =>
   async (_request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const employees = await findEmployees(server);
-      return reply.code(200).send(employees);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    const employees = await findEmployees(server);
+    return reply.code(200).send(employees);
   };
 
 export const getEmployeeByIdHandler =
@@ -35,18 +30,13 @@ export const getEmployeeByIdHandler =
     reply: FastifyReply,
   ) => {
     const { params } = request;
-    try {
-      const employee = await findEmployeeById(server, params.id);
-      if (!employee)
-        return reply
-          .code(404)
-          .send({ message: `Employee '${params.id}' was not found` });
+    const employee = await findEmployeeById(server, params.id);
+    if (!employee)
+      return reply
+        .code(404)
+        .send({ message: `Employee '${params.id}' was not found` });
 
-      return reply.code(200).send(employee);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    return reply.code(200).send(employee);
   };
 
 export const createEmployeeHandler =
@@ -56,13 +46,8 @@ export const createEmployeeHandler =
     reply: FastifyReply,
   ) => {
     const { body } = request;
-    try {
-      const employee = await createEmployee(server, body);
-      return reply.code(201).send(employee);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    const employee = await createEmployee(server, body);
+    return reply.code(201).send(employee);
   };
 
 export const updateEmployeeHandler =
@@ -75,19 +60,14 @@ export const updateEmployeeHandler =
     reply: FastifyReply,
   ) => {
     const { body, params } = request;
-    try {
-      const employeeExists = await checkIfEmployeeExistsById(server, params.id);
-      if (!employeeExists)
-        return reply
-          .code(404)
-          .send({ message: `Employee '${params.id}' was not found` });
+    const employeeExists = await checkIfEmployeeExistsById(server, params.id);
+    if (!employeeExists)
+      return reply
+        .code(404)
+        .send({ message: `Employee '${params.id}' was not found` });
 
-      const employee = await updateEmployee(server, params.id, body);
-      return reply.code(200).send(employee);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    const employee = await updateEmployee(server, params.id, body);
+    return reply.code(200).send(employee);
   };
 
 export const updateEmployeePermissionsHandler =
@@ -100,19 +80,14 @@ export const updateEmployeePermissionsHandler =
     reply: FastifyReply,
   ) => {
     const { body, params } = request;
-    try {
-      const employeeExists = await checkIfEmployeeExistsById(server, params.id);
-      if (!employeeExists)
-        return reply
-          .code(404)
-          .send({ message: `Employee '${params.id}' was not found` });
+    const employeeExists = await checkIfEmployeeExistsById(server, params.id);
+    if (!employeeExists)
+      return reply
+        .code(404)
+        .send({ message: `Employee '${params.id}' was not found` });
 
-      const employee = await updateEmployeePermissions(server, params.id, body);
-      return reply.code(200).send(employee);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    const employee = await updateEmployeePermissions(server, params.id, body);
+    return reply.code(200).send(employee);
   };
 
 export const updateEmployeeScheduleHandler =
@@ -125,19 +100,14 @@ export const updateEmployeeScheduleHandler =
     reply: FastifyReply,
   ) => {
     const { body, params } = request;
-    try {
-      const employeeExists = await checkIfEmployeeExistsById(server, params.id);
-      if (!employeeExists)
-        return reply
-          .code(404)
-          .send({ message: `Employee '${params.id}' was not found` });
+    const employeeExists = await checkIfEmployeeExistsById(server, params.id);
+    if (!employeeExists)
+      return reply
+        .code(404)
+        .send({ message: `Employee '${params.id}' was not found` });
 
-      const employee = await updateEmployeeSchedule(server, params.id, body);
-      return reply.code(200).send(employee);
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    const employee = await updateEmployeeSchedule(server, params.id, body);
+    return reply.code(200).send(employee);
   };
 
 export const deleteEmployeeHandler =
@@ -147,17 +117,12 @@ export const deleteEmployeeHandler =
     reply: FastifyReply,
   ) => {
     const { params } = request;
-    try {
-      const employeeExists = await checkIfEmployeeExistsById(server, params.id);
-      if (!employeeExists)
-        return reply
-          .code(404)
-          .send({ message: `Employee '${params.id}' was not found` });
+    const employeeExists = await checkIfEmployeeExistsById(server, params.id);
+    if (!employeeExists)
+      return reply
+        .code(404)
+        .send({ message: `Employee '${params.id}' was not found` });
 
-      await deleteEmployee(server, params.id);
-      return reply.code(204).send();
-    } catch (e) {
-      server.log.error(e);
-      return reply.code(500).send();
-    }
+    await deleteEmployee(server, params.id);
+    return reply.code(204).send();
   };
