@@ -1,7 +1,7 @@
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 
-const requestByIdParams = z.object({
+export const requestByIdParams = z.object({
   id: z
     .string({
       required_error: "Id is required",
@@ -16,6 +16,10 @@ const errorResponse = z.object({
 
 const noContentResponse = z.never();
 
+const validationErrorResponse = errorResponse.extend({
+  issues: z.array(z.string()),
+});
+
 export type RequestByIdParams = z.infer<typeof requestByIdParams>;
 
 export const { schemas: genericSchemas, $ref: $genericRef } = buildJsonSchemas(
@@ -23,6 +27,7 @@ export const { schemas: genericSchemas, $ref: $genericRef } = buildJsonSchemas(
     requestByIdParams,
     errorResponse,
     noContentResponse,
+    validationErrorResponse,
   },
   { $id: "GenericSchemas" },
 );
