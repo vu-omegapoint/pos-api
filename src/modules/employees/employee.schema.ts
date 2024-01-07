@@ -21,6 +21,10 @@ const permissionsSchema = z
         ).join(", ")}`,
       }),
     }),
+    {
+      required_error: "Permissions are required",
+      invalid_type_error: "Permissions must be an array of permission objects",
+    },
   )
   .refine((items) => new Set(items.map((x) => x.name)).size === items.length, {
     message: "Permission name must be unique",
@@ -62,6 +66,10 @@ const scheduleSchema = z
       .refine((x) => x.startTime < x.endTime, {
         message: "Start time must be before end time",
       }),
+    {
+      required_error: "Schedule is required",
+      invalid_type_error: "Schedule must be an array of work shift objects",
+    },
   )
   .refine(
     (items) => new Set(items.map((x) => x.weekday)).size === items.length,
