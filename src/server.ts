@@ -84,11 +84,6 @@ server.addHook("onRequest", (request, _reply, done) => {
   done();
 });
 
-server.setErrorHandler(async (error, _request, reply) => {
-  server.log.error(error);
-  return await reply.code(500).send();
-});
-
 // Start listening.
 server.listen(
   { port: process.env.PORT ? parseInt(process.env.PORT) : 3000 },
