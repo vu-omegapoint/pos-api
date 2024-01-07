@@ -24,7 +24,7 @@ export const getEmployeesHandler =
       return reply.code(200).send(employees);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -45,7 +45,7 @@ export const getEmployeeByIdHandler =
       return reply.code(200).send(employee);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -61,7 +61,7 @@ export const createEmployeeHandler =
       return reply.code(201).send(employee);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -86,7 +86,7 @@ export const updateEmployeeHandler =
       return reply.code(200).send(employee);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -111,7 +111,7 @@ export const updateEmployeePermissionsHandler =
       return reply.code(200).send(employee);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -136,7 +136,7 @@ export const updateEmployeeScheduleHandler =
       return reply.code(200).send(employee);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -158,6 +158,6 @@ export const deleteEmployeeHandler =
       return reply.code(204).send();
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };

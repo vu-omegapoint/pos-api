@@ -18,7 +18,7 @@ export const getCustomersHandler =
       return reply.code(200).send(customers);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -39,7 +39,7 @@ export const getCustomerByIdHandler =
       return reply.code(200).send(customer);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -55,7 +55,7 @@ export const createCustomerHandler =
       return reply.code(201).send(customer);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -80,7 +80,7 @@ export const updateCustomerHandler =
       return reply.code(200).send(customer);
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
 
@@ -102,6 +102,6 @@ export const deleteCustomerHandler =
       return reply.code(204).send();
     } catch (e) {
       server.log.error(e);
-      return reply.code(500);
+      return reply.code(500).send();
     }
   };
