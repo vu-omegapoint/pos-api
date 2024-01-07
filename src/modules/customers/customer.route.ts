@@ -52,7 +52,10 @@ export const customerRoutes = (server: FastifyInstance) => {
         tags: ["Customers"],
         summary: "Creates a customer.",
         body: $customerRef("createOrUpdateCustomerSchema"),
-        response: { 201: $customerRef("customerResponseSchema") },
+        response: {
+          201: $customerRef("customerResponseSchema"),
+          400: $genericRef("validationErrorResponse"),
+        },
       },
       preValidation: preValidationHandler(
         undefined,
@@ -72,6 +75,7 @@ export const customerRoutes = (server: FastifyInstance) => {
         body: $customerRef("createOrUpdateCustomerSchema"),
         response: {
           200: $customerRef("customerResponseSchema"),
+          400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },

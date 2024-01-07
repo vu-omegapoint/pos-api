@@ -1,95 +1,98 @@
 import { FastifyInstance } from "fastify";
 import {
-  createItemHandler,
-  deleteItemHandler,
-  getItemByIdHandler,
-  getItemsHandler,
-  updateItemHandler,
+  createServiceHandler,
+  deleteServiceHandler,
+  getServiceByIdHandler,
+  getServicesHandler,
+  updateServiceHandler,
 } from ".";
-import { $itemRef, createOrUpdateItemSchema } from "./item.schema";
+import { $serviceRef, createOrUpdateServiceSchema } from "./service.schema";
 import {
   $genericRef,
   preValidationHandler,
   requestByIdParams,
 } from "../generic";
 
-export const itemRoutes = (server: FastifyInstance) => {
+export const serviceRoutes = (server: FastifyInstance) => {
   server.get(
     "/",
     {
       schema: {
-        tags: ["Items"],
-        summary: "List all items",
+        tags: ["Services"],
+        summary: "List all services",
         response: {
-          200: $itemRef("itemsResponseSchema"),
+          200: $serviceRef("servicesResponseSchema"),
         },
       },
     },
-    getItemsHandler(server),
+    getServicesHandler(server),
   );
 
   server.get(
     "/:id",
     {
       schema: {
-        tags: ["Items"],
-        summary: "Get a specific item",
+        tags: ["Services"],
+        summary: "Get a specific service",
         params: $genericRef("requestByIdParams"),
         response: {
-          200: $itemRef("itemResponseSchema"),
+          200: $serviceRef("serviceResponseSchema"),
           404: $genericRef("errorResponse"),
         },
       },
       preValidation: preValidationHandler(requestByIdParams),
     },
-    getItemByIdHandler(server),
+    getServiceByIdHandler(server),
   );
 
   server.post(
     "/",
     {
       schema: {
-        tags: ["Items"],
-        summary: "Creates an item.",
-        body: $itemRef("createOrUpdateItemSchema"),
+        tags: ["Services"],
+        summary: "Creates an service.",
+        body: $serviceRef("createOrUpdateServiceSchema"),
         response: {
-          201: $itemRef("itemResponseSchema"),
+          201: $serviceRef("serviceResponseSchema"),
           400: $genericRef("validationErrorResponse"),
         },
       },
-      preValidation: preValidationHandler(undefined, createOrUpdateItemSchema),
+      preValidation: preValidationHandler(
+        undefined,
+        createOrUpdateServiceSchema,
+      ),
     },
-    createItemHandler(server),
+    createServiceHandler(server),
   );
 
   server.put(
     "/:id",
     {
       schema: {
-        tags: ["Items"],
-        summary: "Edit an item",
+        tags: ["Services"],
+        summary: "Edit an service",
         params: $genericRef("requestByIdParams"),
-        body: $itemRef("createOrUpdateItemSchema"),
+        body: $serviceRef("createOrUpdateServiceSchema"),
         response: {
-          200: $itemRef("itemResponseSchema"),
+          200: $serviceRef("serviceResponseSchema"),
           400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
       preValidation: preValidationHandler(
         requestByIdParams,
-        createOrUpdateItemSchema,
+        createOrUpdateServiceSchema,
       ),
     },
-    updateItemHandler(server),
+    updateServiceHandler(server),
   );
 
   server.delete(
     "/:id",
     {
       schema: {
-        tags: ["Items"],
-        summary: "Delete an item",
+        tags: ["Services"],
+        summary: "Delete an service",
         params: $genericRef("requestByIdParams"),
         response: {
           204: $genericRef("noContentResponse"),
@@ -98,7 +101,7 @@ export const itemRoutes = (server: FastifyInstance) => {
       },
       preValidation: preValidationHandler(requestByIdParams),
     },
-    deleteItemHandler(server),
+    deleteServiceHandler(server),
   );
 
   return Promise.resolve();
