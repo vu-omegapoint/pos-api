@@ -8,8 +8,8 @@ import {
   findOrders,
   updateOrder,
 } from "./order.service";
-import { CreateOrUpdateOrderInput } from ".";
-import { RequestByIdParams } from "../generic";
+import { CreateOrUpdateOrderInput, OrderStatus } from ".";
+import { RequestByIdParams, createBadRequestResponse } from "../generic";
 
 export const getOrdersHandler =
   (server: FastifyInstance) =>
@@ -72,11 +72,14 @@ export const cancelOrderHandler =
     reply: FastifyReply,
   ) => {
     const { params } = request;
-    const orderExists = await checkIfOrderExistsById(server, params.id);
-    if (!orderExists)
+    const order = await findOrderById(server, params.id);
+    if (!order)
       return reply
         .code(404)
         .send({ message: `Order '${params.id}' was not found` });
+
+    if (order.status !== OrderStatus.pending)
+      return createBadRequestResponse(reply, "The order is not pending.");
 
     await cancelOrder(server, params.id);
     return reply.code(204).send();
