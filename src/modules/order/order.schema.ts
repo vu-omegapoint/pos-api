@@ -11,14 +11,14 @@ const orderCore = {
   items: z.array(
     z.object({
       id: z.string().uuid(),
-      quantity: z.number(),
+      quantity: z.number().min(1),
       employeeId: z.string().uuid(),
     }),
   ),
   services: z.array(
     z.object({
       id: z.string().uuid(),
-      startTime: z.date(),
+      startTime: z.date().min(new Date()),
       employeeId: z.string().uuid(),
     }),
   ),

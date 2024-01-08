@@ -51,7 +51,7 @@ export const serviceRoutes = (server: FastifyInstance) => {
     {
       schema: {
         tags: ["Services"],
-        summary: "Creates an service.",
+        summary: "Creates a service.",
         body: $serviceRef("createOrUpdateServiceSchema"),
         response: {
           201: $serviceRef("serviceResponseSchema"),
@@ -71,7 +71,7 @@ export const serviceRoutes = (server: FastifyInstance) => {
     {
       schema: {
         tags: ["Services"],
-        summary: "Edit an service",
+        summary: "Edit a service",
         params: $genericRef("requestByIdParams"),
         body: $serviceRef("createOrUpdateServiceSchema"),
         response: {
@@ -93,7 +93,7 @@ export const serviceRoutes = (server: FastifyInstance) => {
     {
       schema: {
         tags: ["Services"],
-        summary: "Delete an service",
+        summary: "Delete a service",
         params: $genericRef("requestByIdParams"),
         response: {
           204: $genericRef("noContentResponse"),
