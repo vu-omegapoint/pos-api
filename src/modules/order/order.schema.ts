@@ -8,6 +8,7 @@ export enum OrderStatus {
 }
 
 const orderCore = {
+  customerId: z.string().uuid(),
   items: z.array(
     z.object({
       id: z.string().uuid(),
@@ -25,10 +26,13 @@ const orderCore = {
   notes: z.string().optional(),
 };
 
+const orderUpdatable = {
+  status: z.nativeEnum(OrderStatus),
+};
+
 const orderGenerated = {
   id: z.string().uuid(),
   createdAt: z.date(),
-  status: z.nativeEnum(OrderStatus),
 };
 
 export const createOrderSchema = z.object({
@@ -36,13 +40,14 @@ export const createOrderSchema = z.object({
 });
 
 export const updateOrderSchema = z.object({
-  ...orderGenerated,
   ...orderCore,
+  ...orderUpdatable,
 });
 
 const orderResponseSchema = z.object({
   ...orderGenerated,
   ...orderCore,
+  ...orderUpdatable,
 });
 
 const ordersResponseSchema = z.array(orderResponseSchema);

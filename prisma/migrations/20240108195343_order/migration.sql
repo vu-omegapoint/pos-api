@@ -25,7 +25,6 @@ CREATE TABLE "BookedService" (
 -- CreateTable
 CREATE TABLE "Order" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "customerId" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'pending',
     "notes" TEXT,

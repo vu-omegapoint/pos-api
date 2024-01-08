@@ -6,7 +6,24 @@ export async function createOrder(
   input: CreateOrderInput,
 ) {
   return await server.prisma.order.create({
-    data: input, // TODO: fix
+    data: {
+      items: {
+        create: input.items.map((x) => ({
+          quantity: x.quantity,
+          itemId: x.id,
+          employeeId: x.employeeId,
+        })),
+      },
+      customerId: input.customerId,
+      services: {
+        create: input.services.map((x) => ({
+          startTime: x.startTime,
+          serviceId: x.id,
+          employeeId: x.employeeId,
+        })),
+      },
+      notes: input.notes,
+    },
   });
 }
 
@@ -17,7 +34,27 @@ export async function updateOrder(
 ) {
   return await server.prisma.order.update({
     where: { id },
-    data: input, // TODO: fix
+    data: {
+      items: {
+        deleteMany: { id },
+        create: input.items.map((x) => ({
+          quantity: x.quantity,
+          itemId: x.id,
+          employeeId: x.employeeId,
+        })),
+      },
+      services: {
+        deleteMany: { id },
+        create: input.services.map((x) => ({
+          startTime: x.startTime,
+          serviceId: x.id,
+          employeeId: x.employeeId,
+        })),
+      },
+      customerId: input.customerId,
+      status: input.status,
+      notes: input.notes,
+    },
   });
 }
 
