@@ -1,16 +1,13 @@
 import { FastifyInstance } from "fastify";
 import {
+  cancelOrderHandler,
   createOrderHandler,
   deleteOrderHandler,
   getOrderByIdHandler,
   getOrdersHandler,
   updateOrderHandler,
 } from ".";
-import {
-  $orderRef,
-  createOrderSchema,
-  updateOrderSchema,
-} from "./order.schema";
+import { $orderRef, createOrUpdateOrderSchema } from "./order.schema";
 import {
   $genericRef,
   preValidationHandler,
@@ -56,13 +53,13 @@ export const orderRoutes = (server: FastifyInstance) => {
       schema: {
         tags: ["Orders"],
         summary: "Creates an order.",
-        body: $orderRef("createOrderSchema"),
+        body: $orderRef("createOrUpdateOrderSchema"),
         response: {
           201: $orderRef("orderResponseSchema"),
           400: $genericRef("validationErrorResponse"),
         },
       },
-      preValidation: preValidationHandler(undefined, createOrderSchema),
+      preValidation: preValidationHandler(undefined, createOrUpdateOrderSchema),
     },
     createOrderHandler(server),
   );
@@ -74,16 +71,37 @@ export const orderRoutes = (server: FastifyInstance) => {
         tags: ["Orders"],
         summary: "Edit an order",
         params: $genericRef("requestByIdParams"),
-        body: $orderRef("updateOrderSchema"),
+        body: $orderRef("createOrUpdateOrderSchema"),
         response: {
           200: $orderRef("orderResponseSchema"),
           400: $genericRef("validationErrorResponse"),
           404: $genericRef("errorResponse"),
         },
       },
-      preValidation: preValidationHandler(requestByIdParams, updateOrderSchema),
+      preValidation: preValidationHandler(
+        requestByIdParams,
+        createOrUpdateOrderSchema,
+      ),
     },
     updateOrderHandler(server),
+  );
+
+  server.put(
+    "/:id/cancel",
+    {
+      schema: {
+        tags: ["Orders"],
+        summary: "Cancel an order",
+        params: $genericRef("requestByIdParams"),
+        response: {
+          204: $genericRef("noContentResponse"),
+          400: $genericRef("validationErrorResponse"),
+          404: $genericRef("errorResponse"),
+        },
+      },
+      preValidation: preValidationHandler(requestByIdParams),
+    },
+    cancelOrderHandler(server),
   );
 
   server.delete(

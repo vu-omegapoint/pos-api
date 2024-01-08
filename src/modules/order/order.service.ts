@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
-import { CreateOrderInput, UpdateOrderInput } from ".";
+import { OrderStatus, CreateOrUpdateOrderInput } from ".";
 
 export async function createOrder(
   server: FastifyInstance,
-  input: CreateOrderInput,
+  input: CreateOrUpdateOrderInput,
 ) {
   return await server.prisma.order.create({
     data: {
@@ -23,6 +23,7 @@ export async function createOrder(
       },
       customerId: input.customerId,
       notes: input.notes,
+      status: OrderStatus.pending,
     },
     include: { items: true, services: true },
   });
@@ -31,7 +32,7 @@ export async function createOrder(
 export async function updateOrder(
   server: FastifyInstance,
   id: string,
-  input: UpdateOrderInput,
+  input: CreateOrUpdateOrderInput,
 ) {
   return await server.prisma.order.update({
     where: { id },
@@ -53,10 +54,23 @@ export async function updateOrder(
         })),
       },
       customerId: input.customerId,
-      status: input.status,
       notes: input.notes,
     },
     include: { items: true, services: true },
+  });
+}
+
+export async function cancelOrder(server: FastifyInstance, id: string) {
+  await server.prisma.order.update({
+    where: { id },
+    data: { status: OrderStatus.cancelled },
+  });
+}
+
+export async function completeOrder(server: FastifyInstance, id: string) {
+  await server.prisma.order.update({
+    where: { id },
+    data: { status: OrderStatus.completed },
   });
 }
 

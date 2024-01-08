@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import {
+  cancelOrder,
   checkIfOrderExistsById,
   createOrder,
   deleteOrder,
@@ -7,7 +8,7 @@ import {
   findOrders,
   updateOrder,
 } from "./order.service";
-import { CreateOrderInput, UpdateOrderInput } from ".";
+import { CreateOrUpdateOrderInput } from ".";
 import { RequestByIdParams } from "../generic";
 
 export const getOrdersHandler =
@@ -36,7 +37,7 @@ export const getOrderByIdHandler =
 export const createOrderHandler =
   (server: FastifyInstance) =>
   async (
-    request: FastifyRequest<{ Body: CreateOrderInput }>,
+    request: FastifyRequest<{ Body: CreateOrUpdateOrderInput }>,
     reply: FastifyReply,
   ) => {
     const { body } = request;
@@ -48,7 +49,7 @@ export const updateOrderHandler =
   (server: FastifyInstance) =>
   async (
     request: FastifyRequest<{
-      Body: UpdateOrderInput;
+      Body: CreateOrUpdateOrderInput;
       Params: RequestByIdParams;
     }>,
     reply: FastifyReply,
@@ -62,6 +63,23 @@ export const updateOrderHandler =
 
     const order = await updateOrder(server, params.id, body);
     return reply.code(200).send(order);
+  };
+
+export const cancelOrderHandler =
+  (server: FastifyInstance) =>
+  async (
+    request: FastifyRequest<{ Params: RequestByIdParams }>,
+    reply: FastifyReply,
+  ) => {
+    const { params } = request;
+    const orderExists = await checkIfOrderExistsById(server, params.id);
+    if (!orderExists)
+      return reply
+        .code(404)
+        .send({ message: `Order '${params.id}' was not found` });
+
+    await cancelOrder(server, params.id);
+    return reply.code(204).send();
   };
 
 export const deleteOrderHandler =

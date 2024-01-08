@@ -26,40 +26,31 @@ const orderCore = {
   notes: z.string().optional(),
 };
 
-const orderUpdatable = {
+const orderGenerated = {
+  id: z.string().uuid(),
   status: z.nativeEnum(OrderStatus),
 };
 
-const orderGenerated = {
-  id: z.string().uuid(),
-};
-
-export const createOrderSchema = z.object({
+export const createOrUpdateOrderSchema = z.object({
   ...orderCore,
-});
-
-export const updateOrderSchema = z.object({
-  ...orderCore,
-  ...orderUpdatable,
 });
 
 const orderResponseSchema = z.object({
   ...orderGenerated,
   ...orderCore,
-  ...orderUpdatable,
 });
 
 const ordersResponseSchema = z.array(orderResponseSchema);
 
-export type CreateOrderInput = z.infer<typeof createOrderSchema>;
-export type UpdateOrderInput = z.infer<typeof updateOrderSchema>;
+export type CreateOrUpdateOrderInput = z.infer<
+  typeof createOrUpdateOrderSchema
+>;
 
 export const { schemas: orderSchemas, $ref: $orderRef } = buildJsonSchemas(
   {
     orderResponseSchema,
     ordersResponseSchema,
-    createOrderSchema,
-    updateOrderSchema,
+    createOrUpdateOrderSchema,
   },
   { $id: "OrderSchemas" },
 );
