@@ -45,11 +45,13 @@ model BookedItem {
   id         String   @id @default(uuid())
   quantity   Int
   employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  employeeId String   @unique
+  employeeId String
   item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  itemId     String   @unique
+  itemId     String
   order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  orderId    String   @unique
+  orderId    String
+
+  @@unique([itemId, orderId, employeeId])
 }
 
 model Service {
@@ -65,11 +67,13 @@ model BookedService {
   id         String   @id @default(uuid())
   startTime  DateTime
   employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  employeeId String   @unique
+  employeeId String
   service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  serviceId  String   @unique
+  serviceId  String
   order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  orderId    String   @unique
+  orderId    String
+
+  @@unique([serviceId, orderId, employeeId])
 }
 
 model Order {

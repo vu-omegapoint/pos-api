@@ -32,19 +32,7 @@ CREATE TABLE "Order" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BookedItem_employeeId_key" ON "BookedItem"("employeeId");
+CREATE UNIQUE INDEX "BookedItem_itemId_orderId_employeeId_key" ON "BookedItem"("itemId", "orderId", "employeeId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BookedItem_itemId_key" ON "BookedItem"("itemId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "BookedItem_orderId_key" ON "BookedItem"("orderId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "BookedService_employeeId_key" ON "BookedService"("employeeId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "BookedService_serviceId_key" ON "BookedService"("serviceId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "BookedService_orderId_key" ON "BookedService"("orderId");
+CREATE UNIQUE INDEX "BookedService_serviceId_orderId_employeeId_key" ON "BookedService"("serviceId", "orderId", "employeeId");
