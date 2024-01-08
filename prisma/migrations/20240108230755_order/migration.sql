@@ -2,7 +2,7 @@
 CREATE TABLE "BookedItem" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "quantity" INTEGER NOT NULL,
-    "employeeId" TEXT NOT NULL DEFAULT '',
+    "employeeId" TEXT NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
     "itemId" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
     CONSTRAINT "BookedItem_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee" ("id") ON DELETE SET DEFAULT ON UPDATE CASCADE,
@@ -14,7 +14,7 @@ CREATE TABLE "BookedItem" (
 CREATE TABLE "BookedService" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "startTime" DATETIME NOT NULL,
-    "employeeId" TEXT NOT NULL DEFAULT '',
+    "employeeId" TEXT NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
     "serviceId" TEXT NOT NULL,
     "orderId" TEXT NOT NULL,
     CONSTRAINT "BookedService_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "Employee" ("id") ON DELETE SET DEFAULT ON UPDATE CASCADE,

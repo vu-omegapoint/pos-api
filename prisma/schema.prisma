@@ -45,7 +45,7 @@ model BookedItem {
   id         String   @id @default(uuid())
   quantity   Int
   employee   Employee @relation(fields: [employeeId], references: [id], onDelete: SetDefault, onUpdate: Cascade)
-  employeeId String   @default("")
+  employeeId String   @default("00000000-0000-0000-0000-000000000000")
   item       Item     @relation(fields: [itemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   itemId     String
   order      Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Cascade)
@@ -67,7 +67,7 @@ model BookedService {
   id         String   @id @default(uuid())
   startTime  DateTime
   employee   Employee @relation(fields: [employeeId], references: [id], onDelete: SetDefault, onUpdate: Cascade)
-  employeeId String   @default("")
+  employeeId String   @default("00000000-0000-0000-0000-000000000000")
   service    Service  @relation(fields: [serviceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   serviceId  String
   order      Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Cascade)
