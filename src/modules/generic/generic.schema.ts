@@ -2,12 +2,7 @@ import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 
 export const requestByIdParams = z.object({
-  id: z
-    .string({
-      required_error: "Id is required",
-      invalid_type_error: "Id must be a UUID format string",
-    })
-    .uuid(),
+  id: z.string().uuid(),
 });
 
 const errorResponse = z.object({

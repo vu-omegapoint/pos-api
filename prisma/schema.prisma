@@ -14,6 +14,7 @@ model Customer {
   contactInfoId String      @unique
   address       Address     @relation(fields: [addressId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   addressId     String      @unique
+  orders        Order[]
 }
 
 model ContactInfo {
@@ -33,25 +34,65 @@ model Address {
 }
 
 model Item {
-  id          String  @id @default(uuid())
-  name        String
-  description String?
-  price       Decimal
+  id              String       @id @default(uuid())
+  name            String
+  description     String?
+  price           Decimal
+  bookedInstances BookedItem[]
+}
+
+model BookedItem {
+  id         String   @id @default(uuid())
+  quantity   Int
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: SetDefault, onUpdate: Cascade)
+  employeeId String   @default("00000000-0000-0000-0000-000000000000")
+  item       Item     @relation(fields: [itemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  itemId     String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  orderId    String
+
+  @@unique([itemId, orderId, employeeId])
 }
 
 model Service {
-  id          String  @id @default(uuid())
-  name        String
-  description String?
-  price       Decimal
-  duration    Decimal
+  id              String          @id @default(uuid())
+  name            String
+  description     String?
+  price           Decimal
+  duration        Decimal
+  bookedInstances BookedService[]
+}
+
+model BookedService {
+  id         String   @id @default(uuid())
+  startTime  DateTime
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: SetDefault, onUpdate: Cascade)
+  employeeId String   @default("00000000-0000-0000-0000-000000000000")
+  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  serviceId  String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  orderId    String
+
+  @@unique([serviceId, orderId, employeeId])
+}
+
+model Order {
+  id         String          @id @default(uuid())
+  items      BookedItem[]
+  services   BookedService[]
+  customer   Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  customerId String
+  status     String
+  notes      String?
 }
 
 model Employee {
-  id          String       @id @default(uuid())
-  name        String
-  permissions Permission[]
-  schedule    WorkShift[]
+  id              String          @id @default(uuid())
+  name            String
+  permissions     Permission[]
+  schedule        WorkShift[]
+  servicesCatered BookedService[]
+  itemsCatered    BookedItem[]
 }
 
 model Permission {
@@ -69,7 +110,7 @@ model WorkShift {
   weekday    String
   startTime  String
   endTime    String
-  employee   Employee @relation(references: [id], onDelete: Cascade, onUpdate: Cascade, fields: [employeeId])
+  employee   Employee @relation(references: [id], fields: [employeeId], onDelete: Cascade, onUpdate: Cascade)
   employeeId String
 
   @@id([weekday, employeeId])
