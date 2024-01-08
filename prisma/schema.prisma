@@ -44,11 +44,11 @@ model Item {
 model BookedItem {
   id         String   @id @default(uuid())
   quantity   Int
-  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  employeeId String
-  item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: SetDefault, onUpdate: Cascade)
+  employeeId String   @default("")
+  item       Item     @relation(fields: [itemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   itemId     String
-  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   orderId    String
 
   @@unique([itemId, orderId, employeeId])
@@ -66,11 +66,11 @@ model Service {
 model BookedService {
   id         String   @id @default(uuid())
   startTime  DateTime
-  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  employeeId String
-  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: SetDefault, onUpdate: Cascade)
+  employeeId String   @default("")
+  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   serviceId  String
-  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   orderId    String
 
   @@unique([serviceId, orderId, employeeId])
@@ -82,7 +82,7 @@ model Order {
   services   BookedService[]
   customer   Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   customerId String
-  status     String          @default("pending")
+  status     String
   notes      String?
 }
 
