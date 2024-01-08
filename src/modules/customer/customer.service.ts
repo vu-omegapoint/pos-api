@@ -11,12 +11,7 @@ export async function createCustomer(
       contactInfo: { create: input.contactInfo },
       address: { create: input.address },
     },
-    select: {
-      id: true,
-      name: true,
-      contactInfo: true,
-      address: true,
-    },
+    include: { contactInfo: true, address: true },
   });
 }
 
@@ -32,12 +27,7 @@ export async function updateCustomer(
       contactInfo: { update: input.contactInfo },
       address: { update: input.address },
     },
-    select: {
-      id: true,
-      name: true,
-      contactInfo: true,
-      address: true,
-    },
+    include: { contactInfo: true, address: true },
   });
 }
 
@@ -50,23 +40,13 @@ export async function deleteCustomer(server: FastifyInstance, id: string) {
 export async function findCustomerById(server: FastifyInstance, id: string) {
   return await server.prisma.customer.findUnique({
     where: { id },
-    select: {
-      id: true,
-      name: true,
-      contactInfo: true,
-      address: true,
-    },
+    include: { contactInfo: true, address: true },
   });
 }
 
 export async function findCustomers(server: FastifyInstance) {
   return await server.prisma.customer.findMany({
-    select: {
-      id: true,
-      name: true,
-      contactInfo: true,
-      address: true,
-    },
+    include: { contactInfo: true, address: true },
   });
 }
 

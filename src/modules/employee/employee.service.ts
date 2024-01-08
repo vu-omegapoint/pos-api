@@ -15,12 +15,7 @@ export async function createEmployee(
       permissions: { create: input.permissions },
       schedule: { create: input.schedule },
     },
-    select: {
-      id: true,
-      name: true,
-      permissions: true,
-      schedule: true,
-    },
+    include: { permissions: true, schedule: true },
   });
 }
 
@@ -42,12 +37,7 @@ export async function updateEmployee(
         create: input.schedule,
       },
     },
-    select: {
-      id: true,
-      name: true,
-      permissions: true,
-      schedule: true,
-    },
+    include: { permissions: true, schedule: true },
   });
 }
 
@@ -94,23 +84,13 @@ export async function deleteEmployee(server: FastifyInstance, id: string) {
 export async function findEmployeeById(server: FastifyInstance, id: string) {
   return await server.prisma.employee.findUnique({
     where: { id },
-    select: {
-      id: true,
-      name: true,
-      permissions: true,
-      schedule: true,
-    },
+    include: { permissions: true, schedule: true },
   });
 }
 
 export async function findEmployees(server: FastifyInstance) {
   return await server.prisma.employee.findMany({
-    select: {
-      id: true,
-      name: true,
-      permissions: true,
-      schedule: true,
-    },
+    include: { permissions: true, schedule: true },
   });
 }
 

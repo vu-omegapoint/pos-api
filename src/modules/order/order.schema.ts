@@ -32,7 +32,6 @@ const orderUpdatable = {
 
 const orderGenerated = {
   id: z.string().uuid(),
-  createdAt: z.date(),
 };
 
 export const createOrderSchema = z.object({

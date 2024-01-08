@@ -14,7 +14,6 @@ export async function createOrder(
           employeeId: x.employeeId,
         })),
       },
-      customerId: input.customerId,
       services: {
         create: input.services.map((x) => ({
           startTime: x.startTime,
@@ -22,8 +21,10 @@ export async function createOrder(
           employeeId: x.employeeId,
         })),
       },
+      customerId: input.customerId,
       notes: input.notes,
     },
+    include: { items: true, services: true },
   });
 }
 
@@ -55,6 +56,7 @@ export async function updateOrder(
       status: input.status,
       notes: input.notes,
     },
+    include: { items: true, services: true },
   });
 }
 
@@ -65,12 +67,15 @@ export async function deleteOrder(server: FastifyInstance, id: string) {
 }
 
 export async function findOrders(server: FastifyInstance) {
-  return await server.prisma.order.findMany();
+  return await server.prisma.order.findMany({
+    include: { items: true, services: true },
+  });
 }
 
 export async function findOrderById(server: FastifyInstance, id: string) {
   return await server.prisma.order.findUnique({
     where: { id },
+    include: { items: true, services: true },
   });
 }
 
